@@ -6,13 +6,10 @@
 </template>
 
 <script>
+import '@/assets/css/static/reset.css';
+import '@/assets/css/static/app.css'
+
 export default {
   name: 'App',
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Noto Sans KR', sans-serif;
-}
-</style>
