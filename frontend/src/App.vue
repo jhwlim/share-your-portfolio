@@ -1,29 +1,25 @@
 <template>
   <div id="app">
-    face
-    <span class="material-icons md-18">face</span>
-    <button @click="testApi()">API 테스트</button>
+    <HeaderNav v-if="hasHeaderNav"></HeaderNav>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import '@/assets/css/static/reset.css';
-import '@/assets/css/static/app.css'
-import TestApi from '@/api/TestApi.js'
-
+import HeaderNav from '@/components/static/HeaderNav.vue';
 export default {
   name: 'App',
-  methods: {
-    testApi() {
-      TestApi.test()
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      TestApi.test1();
-    },
+  data: function() {
+    return {
+      hasHeaderNav: this.$route.meta.hasHeaderNav === undefined ? true : this.$route.meta.hasHeaderNav,
+    };
+  },
+  components: {
+    HeaderNav,
   },
 }
 </script>
+
+<style scoped>
+@import './assets/css/static/app.css';
+</style>
