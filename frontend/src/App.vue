@@ -6,6 +6,7 @@
 </template>
 
 <script>
+/* eslint-disable*/
 import HeaderNav from '@/components/static/HeaderNav.vue';
 export default {
   name: 'App',
@@ -17,6 +18,11 @@ export default {
   components: {
     HeaderNav,
   },
+  watch: {
+    $route (to, from) {
+      this.hasHeaderNav = this.$route.meta.hasHeaderNav === undefined ? true : this.$route.meta.hasHeaderNav;
+    }
+  }
 }
 </script>
 

@@ -11,7 +11,7 @@
                 </ul>
             </div>
             <div v-else class="header-nav__link">
-                <span class="header-nav__icon-text pointer">로그인</span>
+                <router-link to="/login" class="header-nav__icon-text pointer">로그인</router-link>
                 <span class="header-nav__icon-text pointer">회원가입</span>
             </div>
         </div>        
