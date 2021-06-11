@@ -16,7 +16,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spring.api.domain.auth.service.JwtTokenService;
+import com.spring.api.domain.auth.service.JwtService;
 import com.spring.api.domain.auth.service.RefreshTokenService;
 import com.spring.api.domain.model.RefreshToken;
 import com.spring.api.global.error.model.ErrorResponse;
@@ -39,7 +39,7 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 	private ObjectMapper objectMapper = new ObjectMapper();
 
 	@Autowired
-	private JwtTokenService jwtTokenService;
+	private JwtService jwtTokenService;
 
 	@Autowired
 	private RefreshTokenService refreshTokenService;

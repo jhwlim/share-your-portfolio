@@ -17,6 +17,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import com.spring.api.global.security.filter.RestAuthenticationFilter;
+import com.spring.api.global.security.filter.RestAuthorizationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -43,7 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.anyRequest().permitAll()
 			.and()
 			.addFilter(corsFilter())
-			.addFilter(restAuthenticationFilter());
+			.addFilter(restAuthenticationFilter())
+			.addFilter(restAuthorizationFilter());
 		}
 	
 	@Bean
@@ -70,4 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return filter;
 	}
 	
+	@Bean
+	public RestAuthorizationFilter restAuthorizationFilter() throws Exception {
+		return new RestAuthorizationFilter(this.authenticationManager());
+	}
 }
