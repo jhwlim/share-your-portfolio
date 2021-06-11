@@ -17,6 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.api.domain.auth.service.JwtTokenService;
+import com.spring.api.domain.auth.service.RefreshTokenService;
+import com.spring.api.domain.model.RefreshToken;
 import com.spring.api.global.error.model.ErrorResponse;
 import com.spring.api.global.security.exception.AuthenticationIOException;
 import com.spring.api.global.security.model.LoginDetails;
@@ -38,6 +40,9 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 
 	@Autowired
 	private JwtTokenService jwtTokenService;
+
+	@Autowired
+	private RefreshTokenService refreshTokenService;
 	
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
@@ -63,13 +68,15 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 		
 		LoginDetails user = (LoginDetails) authResult.getPrincipal();
 		String accessToken = jwtTokenService.generateJwtToken(user.getId(), user.getUsername());
+		RefreshToken refreshToken = refreshTokenService.generateRefreshToken(user.getId());
 		
 		LoginResponse loginResponse = LoginResponse.builder()
 											.token(accessToken)
 											.build();
-		
+
 		response.setContentType(RESPONSE_CONTENT_TYPE);
 		response.getWriter().println(objectMapper.writeValueAsString(loginResponse));
+		response.addCookie(refreshTokenService.createRefreshTokenCookie(refreshToken));
 	}
 	
 	@Override
