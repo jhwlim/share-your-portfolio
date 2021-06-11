@@ -15,5 +15,14 @@
 			expired_date = #{expiredDate}
 	</insert>
 	
+	<select id="findRefreshTokenByAccountId" resultType="RefreshToken">
+		SELECT
+			*
+		FROM
+			refresh_tokens
+		WHERE
+			account_id = #{accountId}
+	</select>
+	
 </mapper>
 

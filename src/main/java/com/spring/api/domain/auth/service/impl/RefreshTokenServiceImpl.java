@@ -1,14 +1,18 @@
 package com.spring.api.domain.auth.service.impl;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.spring.api.domain.auth.exception.InvalidRefreshTokenException;
+import com.spring.api.domain.auth.exception.NotFoundRefreshTokenException;
 import com.spring.api.domain.auth.mapper.RefreshTokenMapper;
 import com.spring.api.domain.auth.service.RefreshTokenService;
 import com.spring.api.domain.model.RefreshToken;
@@ -52,6 +56,30 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 		cookie.setMaxAge((int) (validationTime / 1000));
 		cookie.setPath(cookiePath);
 		return cookie;
+	}
+
+	@Override
+	public String getToken(HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie c : cookies) {
+				if (c.getName().equals(cookieName)) {
+					return c.getValue();
+				}
+			}
+		}
+		
+		throw new NotFoundRefreshTokenException();
+	}
+
+	@Override
+	public void verify(String token, int id) {
+		RefreshToken saved = mapper.findRefreshTokenByAccountId(id);
+		if (saved == null
+				|| !saved.getToken().equals(token)
+				|| saved.getExpiredDate().before(new Date())) {
+			throw new InvalidRefreshTokenException();
+		}
 	}
 
 }
