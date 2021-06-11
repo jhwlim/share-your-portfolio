@@ -11,11 +11,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import com.spring.api.global.security.exception.RestAuthenticationEntryPoint;
 import com.spring.api.global.security.filter.RestAuthenticationFilter;
 import com.spring.api.global.security.filter.RestAuthorizationFilter;
 
@@ -37,16 +37,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
-			.httpBasic().disable()
+			.addFilter(corsFilter())
 			.formLogin().disable()
+			.addFilter(restAuthenticationFilter())
+			.addFilter(restAuthorizationFilter())
+			.httpBasic().disable()
 			.authorizeRequests()
-				.antMatchers("/test").hasRole("USER")
+				.antMatchers("/test/**").hasRole("USER")
 			.anyRequest().permitAll()
 			.and()
-			.addFilter(corsFilter())
-			.addFilter(restAuthenticationFilter())
-			.addFilter(restAuthorizationFilter());
-		}
+			.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint());
+	}
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -75,5 +76,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public RestAuthorizationFilter restAuthorizationFilter() throws Exception {
 		return new RestAuthorizationFilter(this.authenticationManager());
+	}
+	
+	@Bean
+	public RestAuthenticationEntryPoint restAuthenticationEntryPoint() {
+		return new RestAuthenticationEntryPoint();
 	}
 }
