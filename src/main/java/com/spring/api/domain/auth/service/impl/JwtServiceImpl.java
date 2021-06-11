@@ -5,13 +5,18 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.spring.api.domain.auth.exception.InvalidAuthenticationHeaderFormatException;
 import com.spring.api.domain.auth.exception.NotFoundAuthenticationHeaderException;
 import com.spring.api.domain.auth.service.JwtService;
+import com.spring.api.global.security.model.LoginDetails;
 
 @Service
 public class JwtServiceImpl implements JwtService {
@@ -54,5 +59,28 @@ public class JwtServiceImpl implements JwtService {
 		return headerContent.replace(tokenPrefix, "");
 	}
 
+	@Override
+	public void verify(String token) throws TokenExpiredException, JWTVerificationException {
+		JWT.require(Algorithm.HMAC256(secretKey)).build().verify(token);
+	}
+
+	@Override
+	public int getId(String token) {
+		return JWT.decode(token).getClaim(CLAIM_ID).asInt();
+	}
+
+	@Override
+	public String getUsername(String token) {
+		return JWT.decode(token).getClaim(CLAIM_USERNAME).asString();
+	}
+	
+	@Override
+	public Authentication getAuthentication(String token) {
+		int id = getId(token);
+		String username = getUsername(token);
+		LoginDetails loginDetails = new LoginDetails(id, username);
+		
+		return new UsernamePasswordAuthenticationToken(loginDetails, null, loginDetails.getAuthorities());
+	}
 	
 }
