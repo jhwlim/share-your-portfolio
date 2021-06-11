@@ -39,7 +39,7 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 	private ObjectMapper objectMapper = new ObjectMapper();
 
 	@Autowired
-	private JwtService jwtTokenService;
+	private JwtService jwtService;
 
 	@Autowired
 	private RefreshTokenService refreshTokenService;
@@ -67,7 +67,7 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 		log.info("login success!");
 		
 		LoginDetails user = (LoginDetails) authResult.getPrincipal();
-		String accessToken = jwtTokenService.generateJwtToken(user.getId(), user.getUsername());
+		String accessToken = jwtService.generateToken(user.getId(), user.getUsername());
 		RefreshToken refreshToken = refreshTokenService.generateRefreshToken(user.getId());
 		
 		LoginResponse loginResponse = LoginResponse.builder()

@@ -4,8 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface JwtService {
 	
-	public String generateJwtToken(int id, String username);
+	public String generateToken(int id, String username);
 	
-	public String getJwtToken(HttpServletRequest request);
+	public String getToken(HttpServletRequest request);
 	
 }

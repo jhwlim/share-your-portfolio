@@ -32,7 +32,7 @@ public class JwtServiceImpl implements JwtService {
 	private String secretKey;
 	
 	@Override
-	public String generateJwtToken(int id, String username) {
+	public String generateToken(int id, String username) {
 		return tokenPrefix + JWT.create()
 								.withClaim(CLAIM_ID, id)
 								.withClaim(CLAIM_USERNAME, username)
@@ -41,7 +41,7 @@ public class JwtServiceImpl implements JwtService {
 	}
 
 	@Override
-	public String getJwtToken(HttpServletRequest request) {
+	public String getToken(HttpServletRequest request) {
 		String headerContent = request.getHeader(headerName);
 		if (headerContent == null) {
 			throw new NotFoundAuthenticationHeaderException();
