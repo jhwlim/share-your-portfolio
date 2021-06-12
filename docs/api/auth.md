@@ -1,21 +1,14 @@
-### 로그인
-method|path|decription
+### Access Token 재발급
+method|path|description
 ---|---|---
-POST|/login|access token을 발급한다.
+GET|/auth/refresh|쿠키에 저장된 refresh token을 사용하여 access token을 재발급한다.
 
 request
 - header :
     ```json
     Content-type: "application/json"
     ```
-- data : 
-    ```json
-    {
-        username: string,
-        password: string
-    }
-    ```
-
+    
 response
 - data :
     ```json
@@ -36,5 +29,4 @@ error
 
     statusCode|Description
     :-:|:--
-    400|request data가 잘못된 경우
-    401|입력한 정보와 일치하는 회원 정보가 없는 경우
+    401|access token이나 refresh token 유효성 검사를 통과하지 못한 경우
