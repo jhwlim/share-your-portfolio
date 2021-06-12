@@ -24,5 +24,12 @@
 			account_id = #{accountId}
 	</select>
 	
+	<delete id="deleteRefreshTokenByAccountId">
+		DELETE FROM
+			refresh_tokens
+		WHERE
+			account_id = #{accountId}
+	</delete>
+	
 </mapper>
 

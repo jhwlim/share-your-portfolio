@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,6 +57,17 @@ public class AuthController {
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	
+	@PostMapping("/logout")
+	public ResponseEntity<Void> logout(HttpServletRequest request) {
+		String token = jwtService.getToken(request);
+		int id = jwtService.getId(token);
+		
+		refreshTokenService.deleteRefreshToken(id);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
 	
 	@ExceptionHandler({Exception.class})
 	protected ResponseEntity<ErrorResponse> handleException(Exception e) {

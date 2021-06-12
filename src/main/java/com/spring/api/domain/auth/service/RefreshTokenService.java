@@ -15,4 +15,6 @@ public interface RefreshTokenService {
 
 	public void verify(String refreshToken, int id);
 	
+	public void deleteRefreshToken(int accountId);
+	
 }

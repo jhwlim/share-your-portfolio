@@ -82,4 +82,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 		}
 	}
 
+	@Override
+	public void deleteRefreshToken(int accountId) {
+		mapper.deleteRefreshTokenByAccountId(accountId);
+	}
+
 }

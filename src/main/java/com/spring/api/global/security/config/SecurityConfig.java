@@ -37,15 +37,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
-			.addFilter(corsFilter())
 			.formLogin().disable()
-			.addFilter(restAuthenticationFilter())
-			.addFilter(restAuthorizationFilter())
+			.logout().disable()
 			.httpBasic().disable()
 			.authorizeRequests()
-				.antMatchers("/test/**").hasRole("USER")
+				.antMatchers("/auth/logout", 
+							 "/test/**").hasRole("USER")
 			.anyRequest().permitAll()
 			.and()
+			.addFilter(corsFilter())
+			.addFilter(restAuthenticationFilter())
+			.addFilter(restAuthorizationFilter())
 			.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint());
 	}
 	
@@ -82,4 +84,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public RestAuthenticationEntryPoint restAuthenticationEntryPoint() {
 		return new RestAuthenticationEntryPoint();
 	}
+	
 }
