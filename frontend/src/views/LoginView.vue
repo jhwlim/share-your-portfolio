@@ -32,9 +32,8 @@
 </template>
 
 <script>
-// import AuthApi from '@/api/AuthApi.js';
-// import AuthUtil from '@/util/AuthUtil.js';
 import { mapActions } from 'vuex';
+import router from '@/router';
 
 export default {
     data: function() {
@@ -67,6 +66,7 @@ export default {
                     this.login({username, password})
                         .then(() => {
                             this.username = '';
+                            router.push('/');
                         }).catch((error) => {
                             console.log(error);
                             this.errorMessage.login = '가입하지 않은 아이디이거나, 잘못된 비밀번호 입니다.';

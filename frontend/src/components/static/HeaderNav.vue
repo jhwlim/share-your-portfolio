@@ -19,15 +19,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
     name: 'HeaderNav',
     data: function() {
         return  {
-            isLogined: false,
             showDropbox: false,
         };
     },
     computed: {
+        ...mapGetters(['isLogined']),
         clickedIconStyle() {
             return this.showDropbox ? 'header-nav__icon--clicked' : null;
         },
