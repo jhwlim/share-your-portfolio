@@ -32,8 +32,9 @@
 </template>
 
 <script>
-import AuthApi from '@/api/AuthApi.js';
-import AuthUtil from '@/util/AuthUtil.js';
+// import AuthApi from '@/api/AuthApi.js';
+// import AuthUtil from '@/util/AuthUtil.js';
+import { mapActions } from 'vuex';
 
 export default {
     data: function() {
@@ -49,6 +50,7 @@ export default {
         };
     },
     methods: {
+        ...mapActions(['user', 'login']),
         submitLoginForm() {
             if (this.canLogin) {
                 this.clearErrorMessage();
@@ -62,24 +64,14 @@ export default {
                     const username = this.username;
                     const password = this.password;
 
-                    AuthApi.login({username, password})
-                        .then((response) => { // 로그인 성공 -> 페이지 변경, 헤더 변경하기, vuex 값 저장
-                            const token = response.data.token;
-                            
-                            // localstorage에 토큰 저장하기
-                            AuthUtil.saveToken(token);
-                            const userInfo = AuthUtil.getUserInfo(token);
-                            console.log(userInfo);
-
+                    this.login({username, password})
+                        .then(() => {
                             this.username = '';
-                            this.password = '';
-                        })
-                        .catch((error) => { // 로그인 실패 -> 에러메시지 출력, 아이디/비밀번호 초기화
+                        }).catch((error) => {
                             console.log(error);
-                            this.password = '';
                             this.errorMessage.login = '가입하지 않은 아이디이거나, 잘못된 비밀번호 입니다.';
-                        })
-                        .finally(() => {
+                        }).finally(() => {
+                            this.password = '';
                             this.canLogin = true;
                         });
                 }
