@@ -27,6 +27,12 @@ const mutations = {
         state.exp = payload.exp;
         state.isLogined = true;
     },
+    clearUserInfo(state) {
+        state.uid = '';
+        state.username = '';
+        state.exp = '';
+        state.isLogined = false;
+    }
 }
 
 const actions = {
@@ -40,6 +46,18 @@ const actions = {
                         context.commit('setUserInfo', userInfo);
                     });
     },
+    logout(context) {
+        return AuthApi.logout()
+                    .then(() => {
+                        AuthUtil.removeToken();
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+                    .finally(() => {
+                        context.commit('clearUserInfo');
+                    });
+    }
 };
 
 export default {

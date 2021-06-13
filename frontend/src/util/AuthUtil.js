@@ -1,12 +1,18 @@
 import jwt_decode from 'jwt-decode'
 
+const tokenName = 'token';
+
 const saveToken = (token) => {
-    localStorage.setItem('token', token);
-}
+    localStorage.setItem(tokenName, token);
+};
 
 const getToken = () => {
-    return localStorage.getItem('token');
-}
+    return localStorage.getItem(tokenName);
+};
+
+const removeToken = () => {
+    localStorage.removeItem(tokenName);
+};
 
 const getUserInfo = (token) => {
     const tokenPrefix = process.env.VUE_APP_JWT_PREFIX + ' ';
@@ -19,10 +25,11 @@ const getUserInfo = (token) => {
         console.log(error);
     }
     return null;
-}
+};
 
 export default {
     saveToken,
     getToken,
     getUserInfo,
-}
+    removeToken,
+};

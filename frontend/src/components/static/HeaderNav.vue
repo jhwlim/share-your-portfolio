@@ -7,7 +7,7 @@
                 <ul v-if="showDropbox" class="header-nav__drop-box shadow">
                     <li class="pointer">계정 관리</li>
                     <li class="pointer">채팅</li>
-                    <li class="pointer">로그아웃</li>
+                    <li class="pointer" @click="logout()">로그아웃</li>
                 </ul>
             </div>
             <div v-else class="header-nav__link">
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
     name: 'HeaderNav',
@@ -35,6 +35,7 @@ export default {
         },
     },
     methods: {
+        ...mapActions(['user', 'logout']),
         changeDropboxState() {
             this.showDropbox = !this.showDropbox;
         },
