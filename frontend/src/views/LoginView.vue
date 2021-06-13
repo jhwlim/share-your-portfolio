@@ -12,8 +12,8 @@
                     <label for="password">패스워드</label>
                     <input type="password" id="password" v-model="password" autocomplete="new-password">
                     <span class="error-message">{{ errorMessage.password }}</span>
+                    <span class="error-message">{{ errorMessage.login }}</span>
                 </div>
-                <span class="error-message">{{ errorMessage.login }}</span>
                 <div class="login-form__btn pointer" @click="submitLoginForm()">로그인</div>
             </form>
             <div class="social-login">
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import AuthApi from '@/api/AuthApi.js';
+
 export default {
     data: function() {
         return {
@@ -52,12 +54,18 @@ export default {
             const isValidPassword = this.checkPassword();
 
             if (isValidUsername && isValidPassword) {
-                console.log('로그인 시도');
-                
-                // 로그인 성공 -> 페이지 변경, 헤더 변경하기, vuex 값 저장
+                const username = this.username;
+                const password = this.password;
 
-                // 로그인 실패 -> 에러메시지 출력, 아이디/비밀번호 초기화
-                this.errorMessage.login = '가입하지 않은 아이디이거나, 잘못된 비밀번호 입니다.';
+                AuthApi.login({username, password})
+                    .then((response) => { // 로그인 성공 -> 페이지 변경, 헤더 변경하기, vuex 값 저장
+                        console.log(response);
+                    })
+                    .catch((error) => { // 로그인 실패 -> 에러메시지 출력, 아이디/비밀번호 초기화
+                        console.log(error);
+                        this.password = '';
+                        this.errorMessage.login = '가입하지 않은 아이디이거나, 잘못된 비밀번호 입니다.';
+                    });
             }
 
         },
