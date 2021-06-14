@@ -23,7 +23,6 @@ axios.interceptors.response.use(response => response, async error => {
         const newToken = AuthUtil.getToken();
         if (newToken !== null) {
             error.config.headers[tokenHeader] = newToken;
-            console.log('retry!');
             return axios.request(error.config);
         }
     } 

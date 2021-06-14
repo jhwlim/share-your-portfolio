@@ -21,13 +21,10 @@ const getUserInfo = (token) => {
     try {
         let user = jwt_decode(token);
         const exp = user.exp;
-        if (Date.now() < exp * 1000) {
-            return user;
-        }
-    } catch(error) {
-        console.log(error);
+        return Date.now() < exp * 1000 ? user : null;
+    } catch {
+        return null;
     }
-    return null;
 };
 
 export default {

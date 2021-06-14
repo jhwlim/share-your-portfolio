@@ -4,7 +4,6 @@ import AuthUtil from '@/util/AuthUtil.js';
 const state = {
     uid: '',
     username: '',
-    exp: 0,
     isLogined: false,
 };
 
@@ -25,7 +24,6 @@ const mutations = {
         if (payload) {
             state.uid = payload.id;
             state.username = payload.username;
-            state.exp = payload.exp;
             state.isLogined = true;    
         } else {
             this.commit('clearUserInfo');
@@ -34,43 +32,34 @@ const mutations = {
     clearUserInfo(state) {
         state.uid = '';
         state.username = '';
-        state.exp = '';
         state.isLogined = false;
     },
 };
 
 const actions = {
-    login(context, {username, password}) {
-        return AuthApi.login({username, password})
-                    .then((response) => {
-                        const token = response.data.token;
-                        AuthUtil.saveToken(token);
-
-                        const userInfo = AuthUtil.getUserInfo(token);
-                        context.commit('setUserInfo', userInfo);
-                    });
+    async login(context, {username, password}) {
+        return await AuthApi.login({username, password})
+                            .then((token) => {
+                                const userInfo = AuthUtil.getUserInfo(token);
+                                context.commit('setUserInfo', userInfo);
+                            });
     },
     async logout(context) {
         await AuthApi.logout();
-
-        AuthUtil.removeToken();
         context.commit('clearUserInfo');
     },
     async refresh(context) {
         const token = await AuthApi.refreshToken();
-        
+        console.log(token);
         if (token !== null) {
-            AuthUtil.saveToken(token);
+            console.log('here!');
             const userInfo = AuthUtil.getUserInfo(token);
             context.commit('setUserInfo', userInfo);
-            console.log('refresh OK');
         } else {
-            AuthUtil.removeToken();
-            console.log('refresh fail');
+            context.commit('clearUserInfo');
         }
     },
     async init(context) {
-        console.log('init!');
         const token = AuthUtil.getToken();
         if (token === null) {
             return;

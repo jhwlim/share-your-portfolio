@@ -33,6 +33,7 @@ public class AuthController {
 	
 	@GetMapping("/refresh")
 	public ResponseEntity<LoginResponse> getRefreshToken(HttpServletRequest request) {
+		log.info("refresh token!");
 		String accessToken = jwtService.getToken(request);
 		String refreshToken = refreshTokenService.getToken(request);
 		
@@ -60,6 +61,7 @@ public class AuthController {
 	
 	@PostMapping("/logout")
 	public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+		log.info("logout!");
 		refreshTokenService.deleteRefreshTokenCookie(request, response);
 		
 		String token = jwtService.getToken(request);
