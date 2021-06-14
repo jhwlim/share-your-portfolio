@@ -1,7 +1,8 @@
 import jwt_decode from 'jwt-decode'
 
 const tokenName = 'token';
-
+const tokenPrefix = process.env.VUE_APP_JWT_PREFIX + ' ';
+    
 const saveToken = (token) => {
     localStorage.setItem(tokenName, token);
 };
@@ -11,16 +12,19 @@ const getToken = () => {
 };
 
 const removeToken = () => {
+    console.log(tokenName);
     localStorage.removeItem(tokenName);
 };
 
 const getUserInfo = (token) => {
-    const tokenPrefix = process.env.VUE_APP_JWT_PREFIX + ' ';
     token = token.replace(tokenPrefix, '');
     
     try {
         let user = jwt_decode(token);
-        return user;
+        const exp = user.exp;
+        if (Date.now() < exp * 1000) {
+            return user;
+        }
     } catch(error) {
         console.log(error);
     }

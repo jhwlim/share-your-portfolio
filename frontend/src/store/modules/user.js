@@ -22,16 +22,29 @@ const getters = {
 
 const mutations = {
     setUserInfo(state, payload) {
-        state.uid = payload.id;
-        state.username = payload.username;
-        state.exp = payload.exp;
-        state.isLogined = true;
+        if (payload) {
+            state.uid = payload.id;
+            state.username = payload.username;
+            state.exp = payload.exp;
+            state.isLogined = true;    
+        } else {
+            this.commit('clearUserInfo');
+        }
     },
     clearUserInfo(state) {
         state.uid = '';
         state.username = '';
         state.exp = '';
         state.isLogined = false;
+    },
+    initUserInfo(state) {
+        const token = AuthUtil.getToken();
+        if (token) {
+            const userInfo = AuthUtil.getUserInfo(token);
+            this.commit('setUserInfo', userInfo);
+        }
+
+        console.log(state); 
     }
 }
 
