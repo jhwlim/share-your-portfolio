@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -85,6 +86,19 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	@Override
 	public void deleteRefreshToken(int accountId) {
 		mapper.deleteRefreshTokenByAccountId(accountId);
+	}
+
+	@Override
+	public void deleteRefreshTokenCookie(HttpServletRequest request, HttpServletResponse response) {
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie c : cookies) {
+				if (c.getName().equals(cookieName)) {
+					c.setMaxAge(0);
+					response.addCookie(c);
+				}
+			}
+		}
 	}
 
 }

@@ -41,8 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.logout().disable()
 			.httpBasic().disable()
 			.authorizeRequests()
-				.antMatchers("/auth/logout", 
-							 "/test/**").hasRole("USER")
+				.antMatchers("/test/**").hasRole("USER")
 				.antMatchers("/admin/**").hasRole("ADMIN")
 			.anyRequest().permitAll()
 			.and()

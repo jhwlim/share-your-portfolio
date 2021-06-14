@@ -1,6 +1,7 @@
 package com.spring.api.domain.auth.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,6 @@ public class AuthController {
 	
 	@GetMapping("/refresh")
 	public ResponseEntity<LoginResponse> getRefreshToken(HttpServletRequest request) {
-		log.info("/auth/refresh 진입");
 		String accessToken = jwtService.getToken(request);
 		String refreshToken = refreshTokenService.getToken(request);
 		
@@ -59,10 +59,11 @@ public class AuthController {
 	}
 	
 	@PostMapping("/logout")
-	public ResponseEntity<Void> logout(HttpServletRequest request) {
+	public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+		refreshTokenService.deleteRefreshTokenCookie(request, response);
+		
 		String token = jwtService.getToken(request);
 		int id = jwtService.getId(token);
-		
 		refreshTokenService.deleteRefreshToken(id);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
