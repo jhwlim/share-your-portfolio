@@ -2,7 +2,7 @@
     <div class="wrapper">
         <div class="container">
             <router-link to="/" class="header pointer">LOGO</router-link>
-            <form class="login-form">
+            <form class="login-form" @submit.prevent>
                 <div class="login-form__input-box">
                     <label for="username">아이디</label>
                     <input type="text" id="username" v-model="username" autocomplete="off">
@@ -10,7 +10,7 @@
                 </div>
                 <div class="login-form__input-box">
                     <label for="password">패스워드</label>
-                    <input type="password" id="password" v-model="password" autocomplete="new-password">
+                    <input type="password" id="password" v-model="password" autocomplete="new-password" @keyup.enter="submitLoginForm()">
                     <span class="error-message">{{ errorMessage.password }}</span>
                     <span class="error-message">{{ errorMessage.login }}</span>
                 </div>

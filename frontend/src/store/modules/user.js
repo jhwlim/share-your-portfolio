@@ -1,7 +1,6 @@
 import AuthApi from '@/api/AuthApi.js';
 import AuthUtil from '@/util/AuthUtil.js';
 
-
 const state = {
     uid: '',
     username: '',
@@ -70,7 +69,7 @@ const actions = {
             console.log('refresh fail');
         }
     },
-    init(context) {
+    async init(context) {
         console.log('init!');
         const token = AuthUtil.getToken();
         if (token === null) {
@@ -83,7 +82,7 @@ const actions = {
             return;
         }
         
-        this.dispatch('refresh');
+        await this.dispatch('refresh');
     },
 };
 
