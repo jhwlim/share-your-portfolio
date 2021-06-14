@@ -43,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				.antMatchers("/auth/logout", 
 							 "/test/**").hasRole("USER")
+				.antMatchers("/admin/**").hasRole("ADMIN")
 			.anyRequest().permitAll()
 			.and()
 			.addFilter(corsFilter())

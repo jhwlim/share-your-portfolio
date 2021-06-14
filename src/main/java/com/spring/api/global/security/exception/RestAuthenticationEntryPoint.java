@@ -16,7 +16,7 @@ import com.spring.api.global.error.model.ErrorResponse;
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
 	private static final String RESPONSE_CONTENT_TYPE = "application/json;charset=utf-8";
-	private static final String MESSAGE = "권한 없음";
+	private static final String MESSAGE = "인증 실패";
 	
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
@@ -24,7 +24,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
 		ErrorResponse errorResponse = ErrorResponse.builder()
-				.httpStatus(HttpStatus.FORBIDDEN)
+				.httpStatus(HttpStatus.UNAUTHORIZED)
 				.message(MESSAGE)
 				.build();
 
