@@ -1,11 +1,12 @@
 import AuthApi from '@/api/AuthApi.js';
 import AuthUtil from '@/util/AuthUtil.js';
 
+
 const state = {
     uid: '',
     username: '',
     exp: 0,
-    isLogined: '',
+    isLogined: false,
 };
 
 const getters = {
@@ -37,16 +38,7 @@ const mutations = {
         state.exp = '';
         state.isLogined = false;
     },
-    initUserInfo(state) {
-        const token = AuthUtil.getToken();
-        if (token) {
-            const userInfo = AuthUtil.getUserInfo(token);
-            this.commit('setUserInfo', userInfo);
-        }
-
-        console.log(state); 
-    }
-}
+};
 
 const actions = {
     login(context, {username, password}) {
@@ -59,18 +51,40 @@ const actions = {
                         context.commit('setUserInfo', userInfo);
                     });
     },
-    logout(context) {
-        return AuthApi.logout()
-                    .then(() => {
-                        AuthUtil.removeToken();
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    })
-                    .finally(() => {
-                        context.commit('clearUserInfo');
-                    });
-    }
+    async logout(context) {
+        await AuthApi.logout();
+
+        AuthUtil.removeToken();
+        context.commit('clearUserInfo');
+    },
+    async refresh(context) {
+        const token = await AuthApi.refreshToken();
+        
+        if (token !== null) {
+            AuthUtil.saveToken(token);
+            const userInfo = AuthUtil.getUserInfo(token);
+            context.commit('setUserInfo', userInfo);
+            console.log('refresh OK');
+        } else {
+            AuthUtil.removeToken();
+            console.log('refresh fail');
+        }
+    },
+    init(context) {
+        console.log('init!');
+        const token = AuthUtil.getToken();
+        if (token === null) {
+            return;
+        }
+
+        let userInfo = AuthUtil.getUserInfo(token);
+        if (userInfo !== null) {
+            context.commit('setUserInfo', userInfo);
+            return;
+        }
+        
+        this.dispatch('refresh');
+    },
 };
 
 export default {

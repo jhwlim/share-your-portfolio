@@ -7,12 +7,11 @@ const saveToken = (token) => {
     localStorage.setItem(tokenName, token);
 };
 
-const getToken = () => {
+const getToken = () => {    
     return localStorage.getItem(tokenName);
 };
 
 const removeToken = () => {
-    console.log(tokenName);
     localStorage.removeItem(tokenName);
 };
 
