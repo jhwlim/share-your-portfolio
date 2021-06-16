@@ -1,4 +1,4 @@
-package com.spring.api.global.web.config;
+package com.spring.api.global.webapp.config;
 
 import java.io.IOException;
 
