@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <div class="header__info">
-            <user-image :id="id" class="header__image pointer"></user-image>
+            <user-image :id="id" class="pointer"></user-image>
             <div class="header__text">
                 <span class="header__username pointer">{{ username }}</span>
                 <span class="header__date">{{ date }}</span>
@@ -37,9 +37,6 @@ export default {
 .header__info {
     display: flex;
     align-items: center;
-}
-.header__image {
-    margin-right: 6px;
 }
 .header__text {
     display: flex;

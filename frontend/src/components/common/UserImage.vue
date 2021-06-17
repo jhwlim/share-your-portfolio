@@ -32,6 +32,7 @@ export default {
     height: 46px;
     display: inline-block;
     overflow: hidden;
+    margin-right: 6px;
 }
 .user-image img {
     width: 100%;

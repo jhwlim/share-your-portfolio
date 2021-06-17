@@ -1,7 +1,7 @@
 <template>
     <div class="content">
-        <h1 class="pointer" @click="moveToPost()">{{ title }}</h1>
-        <p>{{ content }}</p>
+        <h3 class="post__title pointer" @click="moveToPost()">{{ title }}</h3>
+        <p class="post__content">{{ content }}</p>
     </div>
 </template>
 
@@ -21,18 +21,10 @@ export default {
 </script>
 
 <style scoped>
+@import '../../assets/css/post/index.css';
 .content {
     padding: 16px 0;
     min-height: 180px;
     border-bottom: 1.5px #b6b6b6 solid;
-}
-.content h1 {
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 36px;
-}
-.content p {
-    padding: 12px 0;
-    line-height: 24px;
 }
 </style>
