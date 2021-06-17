@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-        <h1 class="pointer">{{ title }}</h1>
+        <h1 class="pointer" @click="moveToPost()">{{ title }}</h1>
         <p>{{ content }}</p>
     </div>
 </template>
@@ -8,9 +8,15 @@
 <script>
 export default {
     props: [
+        'id',
         'title',
         'content'
     ],
+    methods: {
+        moveToPost() {
+            this.$router.push(`/post/${this.id}`)
+        },
+    }
 }
 </script>
 
