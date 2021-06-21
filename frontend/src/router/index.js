@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 import MainView from '@/views/MainView.vue';
 import LoginView from '@/views/LoginView.vue';
 import PostView from '@/views/PostView.vue';
+import AccountView from '@/views/AccountView.vue';
 import TestView from '@/views/TestView.vue';
 import store from '@/store';
 
@@ -24,13 +25,18 @@ const router = new VueRouter({
             meta: {
                 hasHeaderNav: false,
             },
-            beforeEnter: (to, from, next) => {
-                store.getters.isLogined ? next('/') : next();
-            },
         },
         {
             path: '/post/:id', 
             component: PostView,
+        },
+        {
+            path: '/account',
+            name: 'account',
+            component: AccountView,
+            meta: {
+                requireLogin: true,
+            }
         },
         { 
             path: '/test', 
@@ -41,6 +47,20 @@ const router = new VueRouter({
             } 
         },
     ]
+});
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requireLogin)) {
+        if (!store.getters.isLogined) {
+            next({
+                path: '/login',
+                redirect: to.path,
+            });
+            return;
+        }
+    }
+
+    next();
 });
 
 export default router;

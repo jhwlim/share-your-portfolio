@@ -5,7 +5,7 @@
             <div v-if="isLogined"  class="header-nav__link">
                 <span @click="changeDropboxState()" class="material-icons header-nav__icon pointer" :class="clickedIconStyle">account_circle</span>
                 <ul v-if="showDropbox" class="header-nav__drop-box shadow">
-                    <li class="pointer">계정 관리</li>
+                    <li class="pointer"><router-link to="/account">계정 관리</router-link></li>
                     <li class="pointer">채팅</li>
                     <li class="pointer" @click="logout()">로그아웃</li>
                 </ul>
