@@ -15,6 +15,7 @@ button {
     font-family: inherit;
     font-size: inherit;
     margin: 0;
-    padding: 6px 18px;
     letter-spacing: 2px;
+    box-sizing: border-box;
+    text-align: center;
 }

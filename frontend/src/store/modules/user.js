@@ -50,9 +50,7 @@ const actions = {
     },
     async refresh(context) {
         const token = await AuthApi.refreshToken();
-        console.log(token);
         if (token !== null) {
-            console.log('here!');
             const userInfo = AuthUtil.getUserInfo(token);
             context.commit('setUserInfo', userInfo);
         } else {
