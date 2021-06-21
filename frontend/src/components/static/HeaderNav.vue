@@ -1,6 +1,6 @@
 <template>
     <div class="header-nav">
-        <span class="header-nav__name">LOGO</span>
+        <router-link to="/" class="header-nav__name">LOGO</router-link>
         <div class="header-nav__links">
             <div v-if="isLogined"  class="header-nav__link">
                 <span @click="changeDropboxState()" class="material-icons header-nav__icon pointer" :class="clickedIconStyle">account_circle</span>
