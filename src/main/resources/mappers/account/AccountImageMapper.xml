@@ -13,5 +13,12 @@
 			account_id = #{accountId}
 	</select>
 	
+	<insert id="save">
+		INSERT INTO
+			account_images(account_id, path)
+		VALUES
+			(#{accountId}, #{path})
+	</insert>
+	
 </mapper>
 

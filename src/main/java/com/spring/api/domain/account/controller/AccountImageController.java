@@ -54,7 +54,7 @@ public class AccountImageController {
 	
 	@PostMapping
 	public ResponseEntity<Void> uploadAccountImage() {
-		log.info("post");
+		
 		return null;
 	}
 	
