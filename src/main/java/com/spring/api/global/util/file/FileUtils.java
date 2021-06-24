@@ -1,4 +1,4 @@
-package com.spring.api.global.util;
+package com.spring.api.global.util.file;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
