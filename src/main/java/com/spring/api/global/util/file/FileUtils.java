@@ -58,7 +58,7 @@ public class FileUtils {
 	}
 	
 	private String getFileExtension(String fileName) {
-		return fileName.substring(fileName.lastIndexOf(".")).toUpperCase();
+		return fileName.substring(fileName.lastIndexOf(".")+1).toUpperCase();
 	}
 	
 }

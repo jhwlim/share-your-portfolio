@@ -2,6 +2,7 @@ package com.spring.api.domain.account.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.security.Principal;
 
 import org.apache.commons.io.IOUtils;
@@ -59,11 +60,15 @@ public class AccountImageController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> uploadAccountImage(MultipartFile file, AccountImageUploadRequest request, @AuthenticationPrincipal LoginDetails loginDetails) {
+	public ResponseEntity<Void> uploadAccountImage(MultipartFile file,
+												   AccountImageUploadRequest request, 
+												   @AuthenticationPrincipal LoginDetails loginDetails) 
+														   throws IOException {
 		log.info("file=" + file.getOriginalFilename());
 		log.info("request=" + request);
 		log.info("id=" + loginDetails.getId());
-		return null;
+		accountImageService.uploadAccountImage(file, loginDetails.getId(), request);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@DeleteMapping

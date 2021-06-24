@@ -4,10 +4,13 @@ import com.spring.api.global.util.file.CropRequest;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
-@Getter
 @ToString
+@Getter
+@Setter
+@Builder
 public class AccountImageUploadRequest extends CropRequest {
 	
 	private static final int SIZE = 300;
@@ -16,10 +19,6 @@ public class AccountImageUploadRequest extends CropRequest {
 	private int top;
 	private int width;
 	private int height;
-	
-	public AccountImageUploadRequest() {
-		super(SIZE);
-	}
 
 	@Builder
 	public AccountImageUploadRequest(int left, int top, int width, int height) {
