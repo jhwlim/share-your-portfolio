@@ -36,7 +36,16 @@ public class AccountImageServiceImpl implements AccountImageService {
 
 	@Override
 	public void uploadAccountImage(MultipartFile file, int accountId, AccountImageUploadRequest request) throws IOException {
-		fileUtils.saveCroppedImageFile(file, getRootPath(), request);
+		String path = findAccountImagePath(accountId);
+		if (path != null) {
+			fileUtils.deleteFile(getRootPath() + path);
+		}
+		String newPath = fileUtils.saveCroppedImageFile(file, getRootPath(), request);
+		AccountImage accountImage = AccountImage.builder()
+												.accountId(accountId)
+												.path(newPath)
+												.build();
+		mapper.save(accountImage);
 	}
 
 	private String getRootPath() {

@@ -29,8 +29,21 @@ public class FileUtils {
 		BufferedImage savedImage = Scalr.resize(croppedImage, cropRequest.getSize());
 		
 		ImageIO.write(savedImage, getFileExtension(fileName), target);
-		log.info("File upload Success");
+		log.info("File Upload Success");
 		return savedPath.substring(rootPath.length()) + File.separator + fileName;
+	}
+	
+	public void deleteFile(String path) {
+		File file = new File(path);
+		if (!file.exists()) {
+			log.info("File Not Exist");
+			return;
+		}
+		
+		while (file.exists()) {
+			file.delete();
+		}
+		log.info("File Delete Success");
 	}
 	
 	private String makeCurrentDayPath(String rootPath) {

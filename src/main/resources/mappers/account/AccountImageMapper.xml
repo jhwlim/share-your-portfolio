@@ -18,6 +18,8 @@
 			account_images(account_id, path)
 		VALUES
 			(#{accountId}, #{path})
+		ON DUPLICATE KEY UPDATE
+			path = #{path}
 	</insert>
 	
 </mapper>
