@@ -14,7 +14,7 @@
             ></cropper>
         </div>
         <div slot="footer" class="modal__footer">
-            <button>Upload Image</button>
+            <button @click="uploadImage()">Upload Image</button>
         </div>
     </common-modal>
 </template>
@@ -24,6 +24,7 @@
 import CommonModal from '@/components/common/CommonModal.vue';
 import { Cropper, CircleStencil } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
+import api from '@/api/AccountImageApi.js';
 
 function getMimeType(file, fallback = null) {
 	const byteArray = (new Uint8Array(file)).subarray(0, 4);
@@ -107,7 +108,28 @@ export default {
 
                 reader.readAsArrayBuffer(files[0]);
             }
-        }
+        },
+        async uploadImage() {
+            this.loading();
+
+            const form = new FormData();
+            form.append('file', this.image.file);
+            const coordinates = this.image.coordinates;
+            Object.keys(coordinates).forEach(key => {
+                form.append(key, coordinates[key]);
+            });
+
+            await api.upload()
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.log(error.response.data);
+                });
+            
+            this.complete();
+            this.closeModal();
+        },
     },
 }
 </script>
