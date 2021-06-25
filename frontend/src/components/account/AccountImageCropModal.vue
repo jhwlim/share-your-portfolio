@@ -119,14 +119,13 @@ export default {
                 form.append(key, coordinates[key]);
             });
 
-            await api.upload()
+            await api.upload(form)
                 .then(response => {
-                    console.log(response.data);
+                    console.log(response);
                 })
                 .catch(error => {
-                    console.log(error.response.data);
+                    console.log(error.response);
                 });
-            
             this.complete();
             this.closeModal();
         },
@@ -135,6 +134,11 @@ export default {
 </script>
 
 <style scoped>
+.cropper {
+  max-width: 70vw;
+  max-height: 70vh;
+  background: #DDD;
+}
 .modal__header {
   display: flex;
   justify-content: space-between;

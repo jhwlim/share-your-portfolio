@@ -75,10 +75,10 @@ export default {
             this.isLoading = true;
             await api.remove()
                 .then((response)=> {
-                    console.log(response.data);
+                    console.log(response);
                 })
                 .catch((error) => {
-                    console.log(error.response.data);
+                    console.log(error.response);
                 });
             this.isLoading = false;
         },

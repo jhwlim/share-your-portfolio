@@ -3,7 +3,11 @@
         <span class="header-nav__name">LOGO</span>
         <div class="header-nav__links">
             <div v-if="isLogined"  class="header-nav__link">
-                <span @click="changeDropboxState()" class="material-icons header-nav__icon pointer" :class="clickedIconStyle">account_circle</span>
+                <user-image 
+                    :id="getUid"
+                    :class="clickedIconStyle"
+                    @click.native="changeDropboxState()"         
+                    class="header-nav__icon pointer"></user-image>
                 <ul v-if="showDropbox" class="header-nav__drop-box shadow">
                     <li class="pointer"><router-link to="/account">계정 관리</router-link></li>
                     <li class="pointer">채팅</li>
@@ -19,17 +23,24 @@
 </template>
 
 <script>
+import UserImage from '@/components/common/UserImage.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
     name: 'HeaderNav',
+    components: {
+        UserImage,
+    },
     data: function() {
         return  {
             showDropbox: false,
         };
     },
     computed: {
-        ...mapGetters(['isLogined']),
+        ...mapGetters([
+            'isLogined', 
+            'getUid'
+        ]),
         clickedIconStyle() {
             return this.showDropbox ? 'header-nav__icon--clicked' : null;
         },
@@ -81,7 +92,7 @@ export default {
 }
 .header-nav__drop-box {
     position: absolute;
-    top: 46px;
+    top: 48px;
     right: 0;
     border: 1px solid gray;
     border-radius: 5px;
