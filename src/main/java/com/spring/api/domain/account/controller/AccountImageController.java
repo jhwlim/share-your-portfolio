@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,8 @@ import lombok.extern.log4j.Log4j;
 @RequestMapping("/account/image")
 @RestController
 public class AccountImageController {
+	
+	
 	
 	@Autowired
 	private AccountImageService accountImageService;
@@ -47,9 +50,10 @@ public class AccountImageController {
 												   AccountImageUploadRequest request, 
 												   @AuthenticationPrincipal LoginDetails loginDetails) 
 														   throws IOException {
-		log.info("file=" + file.getOriginalFilename());
-		log.info("request=" + request);
-		log.info("id=" + loginDetails.getId());
+		if (file == null) {
+			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+		}
+		
 		accountImageService.uploadAccountImage(file, loginDetails.getId(), request);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -58,6 +62,18 @@ public class AccountImageController {
 	public ResponseEntity<Void> deleteAccountImage() {
 		log.info("delete");
 		return null;
+	}
+
+	@ExceptionHandler({IllegalArgumentException.class})
+	protected ResponseEntity<String> handleBadRequest(Exception e) {
+		log.warn(e.getMessage());
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(Exception.class)
+	protected ResponseEntity<String> handleException(Exception e) {
+		log.warn(e.getMessage());
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 }
