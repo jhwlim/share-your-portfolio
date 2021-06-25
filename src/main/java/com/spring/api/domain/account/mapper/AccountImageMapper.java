@@ -8,4 +8,6 @@ public interface AccountImageMapper {
 	
 	public void save(AccountImage accountImage);
 	
+	public void delete(int accountId);
+	
 }

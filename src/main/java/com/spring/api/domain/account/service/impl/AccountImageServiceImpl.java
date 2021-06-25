@@ -69,5 +69,14 @@ public class AccountImageServiceImpl implements AccountImageService {
 	private String getRootPath() {
 		return root + File.separator + accountPath;
 	}
+
+	@Override
+	public void deleteAccountImage(int accountId) {
+		String path = findAccountImagePath(accountId);
+		if (path != null) {
+			mapper.delete(accountId);
+			fileUtils.deleteFile(getRootPath() + path);
+		}
+	}
 	
 }

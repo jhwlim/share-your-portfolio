@@ -18,4 +18,6 @@ public interface AccountImageService {
 	
 	public void uploadAccountImage(MultipartFile file, int accountId, AccountImageUploadRequest request) throws IOException;
 	
+	public void deleteAccountImage(int accountId);
+	
 }

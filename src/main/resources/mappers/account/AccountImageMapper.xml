@@ -22,5 +22,12 @@
 			path = #{path}
 	</insert>
 	
+	<delete id="delete">
+		DELETE FROM
+			account_images
+		WHERE
+			account_id = #{accountId}
+	</delete>
+	
 </mapper>
 

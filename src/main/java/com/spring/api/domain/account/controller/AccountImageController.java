@@ -28,8 +28,6 @@ import lombok.extern.log4j.Log4j;
 @RestController
 public class AccountImageController {
 	
-	
-	
 	@Autowired
 	private AccountImageService accountImageService;
 	
@@ -59,9 +57,9 @@ public class AccountImageController {
 	}
 	
 	@DeleteMapping
-	public ResponseEntity<Void> deleteAccountImage() {
-		log.info("delete");
-		return null;
+	public ResponseEntity<Void> deleteAccountImage(@AuthenticationPrincipal LoginDetails loginDetails) {
+		accountImageService.deleteAccountImage(loginDetails.getId());
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@ExceptionHandler({IllegalArgumentException.class})
