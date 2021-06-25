@@ -1,10 +1,14 @@
 package com.spring.api.domain.account.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +16,7 @@ import com.spring.api.domain.account.dto.AccountImageUploadRequest;
 import com.spring.api.domain.account.mapper.AccountImageMapper;
 import com.spring.api.domain.account.service.AccountImageService;
 import com.spring.api.domain.model.AccountImage;
+import com.spring.api.global.util.file.AccountImageMediaType;
 import com.spring.api.global.util.file.FileUtils;
 
 @Service
@@ -34,6 +39,19 @@ public class AccountImageServiceImpl implements AccountImageService {
 		return mapper.findAccountImagePath(accountId);
 	}
 
+	@Override
+	public HttpHeaders generateHttpHeader(String path) {
+		String ext = fileUtils.getFileExtension(path);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(AccountImageMediaType.valueOf(ext).getMediaType());
+		return headers;
+	}
+
+	@Override
+	public byte[] parseByteArray(String path) throws FileNotFoundException, IOException {
+		return IOUtils.toByteArray(new FileInputStream(getRootPath() + path));
+	}
+	
 	@Override
 	public void uploadAccountImage(MultipartFile file, int accountId, AccountImageUploadRequest request) throws IOException {
 		String path = findAccountImagePath(accountId);

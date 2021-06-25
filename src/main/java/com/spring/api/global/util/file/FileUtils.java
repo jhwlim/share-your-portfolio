@@ -70,7 +70,7 @@ public class FileUtils {
 		return sb.toString();
 	}
 	
-	private String getFileExtension(String fileName) {
+	public String getFileExtension(String fileName) {
 		return fileName.substring(fileName.lastIndexOf(".")+1).toUpperCase();
 	}
 	
