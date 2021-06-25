@@ -38,6 +38,7 @@
 import UserImage from '@/components/common/UserImage.vue';
 import ImageCropModal from './AccountImageCropModal.vue';
 import { mapGetters } from 'vuex';
+import api from '@/api/AccountImageApi.js';
 
 export default {
     components: {
@@ -70,8 +71,16 @@ export default {
                 this.$refs.cropModal.loadImage(files);
             }
         },
-        deleteImage() {
-            console.log('Delete!');
+        async deleteImage() {
+            this.isLoading = true;
+            await api.remove()
+                .then((response)=> {
+                    console.log(response.data);
+                })
+                .catch((error) => {
+                    console.log(error.response.data);
+                });
+            this.isLoading = false;
         },
         closeModal() {
             this.showModal = false;
