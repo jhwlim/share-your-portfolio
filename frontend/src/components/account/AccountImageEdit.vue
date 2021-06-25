@@ -5,35 +5,51 @@
             @mouseleave="showBtn = false">
             <user-image 
                 :id="getUid"
+                :isLoading="isLoading"
                 class="account-image__image"></user-image>
             <div 
-                v-if="showBtn"
+                v-if="showBtn && !isLoading"
                 class="account-image__hide">
-                <button 
-                    @click="uploadImage()"
-                    class="pointer">수정</button>
+                <button @click="$refs.file.click()" class="pointer">
+                    수정
+                    <input 
+                        type="file" 
+                        ref="file" 
+                        @change="uploadImage($event)" 
+                        accept="image/png">
+                </button>
                 <button 
                     @click="deleteImage()"
                     class="pointer">삭제</button>
             </div>
         </div>
-        
         <span>{{ getUsername }}</span>
+        <image-crop-modal 
+            ref="cropModal"
+            v-show="showModal"
+            @showModal="showModal = true"
+            @closeModal="closeModal()"
+            @loading="loading()"
+            @complete="complete()"></image-crop-modal>
     </div>
 </template>
 
 <script>
 import UserImage from '@/components/common/UserImage.vue';
+import ImageCropModal from './AccountImageCropModal.vue';
 import { mapGetters } from 'vuex';
 
 export default {
+    components: {
+        UserImage,
+        ImageCropModal,
+    },
     data: function() {
         return {
             showBtn: false,
+            showModal: false,
+            isLoading: false,
         };
-    },
-    components: {
-        UserImage,
     },
     computed: {
         ...mapGetters([
@@ -42,11 +58,24 @@ export default {
         ]),
     },
     methods: {
-        uploadImage() {
-            console.log('Upload!')
+        loading() {
+            this.isLoading = true;
+        },
+        complete() {
+            this.isLoading = false;
+        },
+        uploadImage(event) {
+            const { files } = event.target;
+            if (files && files[0]) {
+                this.$refs.cropModal.loadImage(files);
+            }
         },
         deleteImage() {
             console.log('Delete!');
+        },
+        closeModal() {
+            this.showModal = false;
+            this.files = null;
         },
     }
 }
@@ -99,5 +128,8 @@ export default {
 .account-image__hide button:hover{
     background: #ffffff;
     color: #000;
+}
+.account-image__hide input {
+    display: none;
 }
 </style>

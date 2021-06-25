@@ -1,6 +1,7 @@
 <template>
     <div class="user-image">
-        <img v-if="!isError" :src="imgSrc" alt="??" @error="imageError()">
+        <img v-if="isLoading" src="@/assets/image/loading.gif">
+        <img v-else-if="!isError" :src="imgSrc" alt="??" @error="imageError()">
         <img src="@/assets/image/no-account-image.png">
     </div>
 </template>
@@ -12,7 +13,7 @@ export default {
             isError: false,
         };
     },
-    props: ['id'],
+    props: ['id', 'isLoading'],
     computed: {
         imgSrc() {
             return `/account/image/${this.id}`;
