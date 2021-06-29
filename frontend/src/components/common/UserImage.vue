@@ -35,6 +35,7 @@ export default {
     overflow: hidden;
     margin-right: 6px;
     border-radius: 50%;
+    background-color: white;
 }
 .user-image img {
     width: 100%;
