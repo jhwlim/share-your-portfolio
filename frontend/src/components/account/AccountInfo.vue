@@ -2,24 +2,15 @@
     <ul class="account-info">
         <li class="account-info__item">
             <span>이름</span>
-            <div>
-                <input type="text">
-                <button>수정</button>
-            </div>
+            <div><input type="text" readonly></div>
         </li>
         <li class="account-info__item">
             <span>비밀번호</span>
-            <div>
-                <input type="text">
-                <button>수정</button>
-            </div>
+            <div><button>수정</button></div>
         </li>
         <li class="account-info__item">
             <span>이메일</span>
-            <div>
-                <input type="text">
-                <button>수정</button>
-            </div>
+            <div><input type="text" readonly></div>
         </li>
     </ul>
 </template>
@@ -50,14 +41,14 @@ export default {
     justify-content: space-between;
 }
 .account-info__item input {
-    width: calc(100% - 60px - 1px);
+    width: 100%;
     box-sizing: border-box;
     padding: 4px 6px;
     font-family: inherit;
     font-size: 14px;
 }
 .account-info__item button {
-    width: 60px;
-    height: 32px;
+    width: 100%;
+    height: 36px;
 }
 </style>
