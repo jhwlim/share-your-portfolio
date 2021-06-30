@@ -1,6 +1,7 @@
 <template>
     <div class="user-image">
-        <img v-if="!isError" :src="imgSrc" alt="??" @error="imageError()">
+        <img v-if="isLoading" src="@/assets/image/loading.gif">
+        <img v-else-if="!isError" :src="imgSrc" @error="imageError()">
         <img src="@/assets/image/no-account-image.png">
     </div>
 </template>
@@ -12,17 +13,25 @@ export default {
             isError: false,
         };
     },
-    props: ['id'],
+    props: ['id', 'isLoading'],
     computed: {
         imgSrc() {
-            return `/account/image/${this.id}`;
+            return `http://localhost:8081/api/account/image/${this.id}`;
         },
+    },
+    watch: {
+        isLoading: function() {
+            if (this.isLoading === true) {
+                this.isError = false;
+            }
+        }
     },
     methods: {
         imageError() {
             this.isError = true;
+            this.$emit('error');
         },
-    }
+    },
 }
 </script>
 
@@ -32,6 +41,9 @@ export default {
     height: 46px;
     display: inline-block;
     overflow: hidden;
+    margin-right: 6px;
+    border-radius: 50%;
+    background-color: white;
 }
 .user-image img {
     width: 100%;

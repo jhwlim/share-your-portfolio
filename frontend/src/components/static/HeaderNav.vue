@@ -3,9 +3,16 @@
         <router-link to="/" class="header-nav__name">LOGO</router-link>
         <div class="header-nav__links">
             <div v-if="isLogined"  class="header-nav__link">
-                <span @click="changeDropboxState()" class="material-icons header-nav__icon pointer" :class="clickedIconStyle">account_circle</span>
+                <div class="header-nav__user-image"
+                    :class="clickedIconStyle"
+                    @click="changeDropboxState()">
+                    <user-image 
+                        :id="getUid"
+                        :isLoading="isImageLoading"
+                        class="header-nav__icon pointer"></user-image>
+                </div>
                 <ul v-if="showDropbox" class="header-nav__drop-box shadow">
-                    <li class="pointer">계정 관리</li>
+                    <li class="pointer"><router-link to="/account">계정 관리</router-link></li>
                     <li class="pointer">채팅</li>
                     <li class="pointer" @click="logout()">로그아웃</li>
                 </ul>
@@ -19,17 +26,25 @@
 </template>
 
 <script>
+import UserImage from '@/components/common/UserImage.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
     name: 'HeaderNav',
+    components: {
+        UserImage,
+    },
     data: function() {
         return  {
             showDropbox: false,
         };
     },
     computed: {
-        ...mapGetters(['isLogined']),
+        ...mapGetters([
+            'isLogined', 
+            'getUid',
+            'isImageLoading',
+        ]),
         clickedIconStyle() {
             return this.showDropbox ? 'header-nav__icon--clicked' : null;
         },
@@ -81,7 +96,7 @@ export default {
 }
 .header-nav__drop-box {
     position: absolute;
-    top: 46px;
+    top: 52px;
     right: 0;
     border: 1px solid gray;
     border-radius: 5px;
@@ -96,5 +111,15 @@ export default {
 }
 .header-nav__drop-box li:last-child {
     border-bottom: 0;
+}
+.header-nav__user-image {
+    height: 50px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.header-nav__user-image div {
+    margin: 0;
 }
 </style>

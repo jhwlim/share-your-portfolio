@@ -1,6 +1,6 @@
 <template>
     <div class="post">
-        <div class="post__image pointer">
+        <div class="post__image pointer" @click="moveToPost()">
             <!-- <img :src="post.imagePath" alt=""> -->
             <img src="@/assets/image/post-1.jpg" alt="">
         </div>
@@ -10,6 +10,7 @@
                 :username="post.writer" 
                 :date="post.writeDate"></post-description-header>
             <post-description-content
+                :id="post.id"
                 :title="post.title"
                 :content="post.content"></post-description-content>
             <post-description-footer
@@ -35,6 +36,11 @@ export default {
     props: [
         'post'
     ],
+    methods: {
+        moveToPost() {
+            this.$router.push(`/post/${this.post.id}`)
+        },
+    }
 }
 </script>
 

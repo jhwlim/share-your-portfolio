@@ -15,6 +15,7 @@ export default {
         return {
             posts: [
                 {
+                    id: 1,
                     imagePath : '',
                     writer: 'test01',
                     writerId: 1,
@@ -27,6 +28,7 @@ export default {
                     isLiked: true,
                 },
                 {
+                    id: 3,
                     imagePath : '',
                     writer: 'test02',
                     writerId: 2,

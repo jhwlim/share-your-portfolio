@@ -5,6 +5,7 @@ const state = {
     uid: '',
     username: '',
     isLogined: false,
+    isImageLoading: false,
 };
 
 const getters = {
@@ -16,7 +17,10 @@ const getters = {
     },
     isLogined(state) {
         return state.isLogined;
-    }
+    },
+    isImageLoading(state) {
+        return state.isImageLoading;
+    },
 }
 
 const mutations = {
@@ -34,6 +38,9 @@ const mutations = {
         state.username = '';
         state.isLogined = false;
     },
+    changeImageLoadingState(state, payload) {
+        state.isImageLoading = payload;
+    },
 };
 
 const actions = {
@@ -50,9 +57,7 @@ const actions = {
     },
     async refresh(context) {
         const token = await AuthApi.refreshToken();
-        console.log(token);
         if (token !== null) {
-            console.log('here!');
             const userInfo = AuthUtil.getUserInfo(token);
             context.commit('setUserInfo', userInfo);
         } else {
