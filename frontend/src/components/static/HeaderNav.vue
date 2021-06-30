@@ -7,7 +7,8 @@
                     :class="clickedIconStyle"
                     @click="changeDropboxState()">
                     <user-image 
-                        :id="getUid"      
+                        :id="getUid"
+                        :isLoading="isImageLoading"
                         class="header-nav__icon pointer"></user-image>
                 </div>
                 <ul v-if="showDropbox" class="header-nav__drop-box shadow">
@@ -41,7 +42,8 @@ export default {
     computed: {
         ...mapGetters([
             'isLogined', 
-            'getUid'
+            'getUid',
+            'isImageLoading',
         ]),
         clickedIconStyle() {
             return this.showDropbox ? 'header-nav__icon--clicked' : null;

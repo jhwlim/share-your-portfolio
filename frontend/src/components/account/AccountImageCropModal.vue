@@ -119,6 +119,7 @@ export default {
                 form.append(key, coordinates[key]);
             });
 
+            this.closeModal();
             await api.upload(form)
                 .then(response => {
                     console.log(response);
@@ -137,7 +138,7 @@ export default {
 .cropper {
   max-width: 70vw;
   max-height: 70vh;
-  background: #DDD;
+  background-color: #DDD;
 }
 .modal__header {
   display: flex;

@@ -5,6 +5,7 @@ const state = {
     uid: '',
     username: '',
     isLogined: false,
+    isImageLoading: false,
 };
 
 const getters = {
@@ -16,7 +17,10 @@ const getters = {
     },
     isLogined(state) {
         return state.isLogined;
-    }
+    },
+    isImageLoading(state) {
+        return state.isImageLoading;
+    },
 }
 
 const mutations = {
@@ -33,6 +37,9 @@ const mutations = {
         state.uid = '';
         state.username = '';
         state.isLogined = false;
+    },
+    changeImageLoadingState(state, payload) {
+        state.isImageLoading = payload;
     },
 };
 

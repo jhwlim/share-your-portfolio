@@ -37,7 +37,7 @@
 <script>
 import UserImage from '@/components/common/UserImage.vue';
 import ImageCropModal from './AccountImageCropModal.vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import api from '@/api/AccountImageApi.js';
 
 export default {
@@ -59,11 +59,15 @@ export default {
         ]),
     },
     methods: {
+        ...mapMutations(['user', 'changeImageLoadingState']
+        ),
         loading() {
             this.isLoading = true;
+            this.changeImageLoadingState(true);
         },
         complete() {
             this.isLoading = false;
+            this.changeImageLoadingState(false);
         },
         uploadImage(event) {
             const { files } = event.target;
@@ -72,7 +76,7 @@ export default {
             }
         },
         async deleteImage() {
-            this.isLoading = true;
+            this.loading();
             await api.remove()
                 .then((response)=> {
                     console.log(response);
@@ -80,7 +84,7 @@ export default {
                 .catch((error) => {
                     console.log(error.response);
                 });
-            this.isLoading = false;
+            this.complete();
         },
         closeModal() {
             this.showModal = false;
