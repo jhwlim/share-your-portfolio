@@ -121,9 +121,6 @@ export default {
 
             this.closeModal();
             await api.upload(form)
-                .then(response => {
-                    console.log(response);
-                })
                 .catch(error => {
                     console.log(error.response);
                 });

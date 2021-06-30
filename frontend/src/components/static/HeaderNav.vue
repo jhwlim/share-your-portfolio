@@ -49,6 +49,11 @@ export default {
             return this.showDropbox ? 'header-nav__icon--clicked' : null;
         },
     },
+    watch: {
+        '$route' () {
+            this.showDropbox = false;
+        }
+    },
     methods: {
         ...mapActions(['user', 'logout']),
         changeDropboxState() {

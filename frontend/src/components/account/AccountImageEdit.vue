@@ -82,9 +82,6 @@ export default {
         async deleteImage() {
             this.loading();
             await api.remove()
-                .then((response)=> {
-                    console.log(response);
-                })
                 .catch((error) => {
                     console.log(error.response);
                 });
