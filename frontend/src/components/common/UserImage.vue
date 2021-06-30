@@ -19,6 +19,13 @@ export default {
             return `http://localhost:8081/api/account/image/${this.id}`;
         },
     },
+    watch: {
+        isLoading: function() {
+            if (this.isLoading === true) {
+                this.isError = false;
+            }
+        }
+    },
     methods: {
         imageError() {
             this.isError = true;
