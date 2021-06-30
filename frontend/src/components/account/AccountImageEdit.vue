@@ -6,6 +6,7 @@
             <user-image 
                 :id="getUid"
                 :isLoading="isLoading"
+                @error="handleUserImageError()"
                 class="account-image__image"></user-image>
             <div 
                 v-if="showBtn && !isLoading"
@@ -19,6 +20,7 @@
                         accept="image/png">
                 </button>
                 <button 
+                    v-if="showDeleteBtn"
                     @click="deleteImage()"
                     class="pointer">삭제</button>
             </div>
@@ -50,6 +52,7 @@ export default {
             showBtn: false,
             showModal: false,
             isLoading: false,
+            showDeleteBtn: true,
         };
     },
     computed: {
@@ -63,6 +66,7 @@ export default {
         ),
         loading() {
             this.isLoading = true;
+            this.showDeleteBtn = true;
             this.changeImageLoadingState(true);
         },
         complete() {
@@ -89,6 +93,9 @@ export default {
         closeModal() {
             this.showModal = false;
             this.files = null;
+        },
+        handleUserImageError() {
+            this.showDeleteBtn = false;
         },
     }
 }
@@ -126,7 +133,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 25px 20px;
     box-sizing: border-box;
     border-radius: 10px;
@@ -137,6 +144,10 @@ export default {
     border-radius: 5px;
     background: transparent;
     color: #ffffff;
+    margin-bottom: 10px;
+}
+.account-image__hide button:last-child {
+    margin-bottom: 0;
 }
 .account-image__hide button:hover{
     background: #ffffff;

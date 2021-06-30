@@ -29,6 +29,7 @@ export default {
     methods: {
         imageError() {
             this.isError = true;
+            this.$emit('error');
         },
     },
 }
