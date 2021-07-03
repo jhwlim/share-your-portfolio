@@ -17,15 +17,7 @@
                 <div class="login-form__btn pointer" @click="submitLoginForm()">로그인</div>
             </form>
             <div class="social-login">
-                <div class="social-login__icon pointer">
-                    <img src="@/assets/image/naver-icon.png" alt="">
-                </div>
-                <div class="social-login__icon pointer">
-                    <img src="@/assets/image/kakaotalk-icon.png" alt="">
-                </div>
-                <div class="social-login__icon social-login__icon--small pointer">
-                    <img src="@/assets/image/google-icon.png" alt="">
-                </div>
+                <naver-login-btn></naver-login-btn>
             </div>
         </div>
     </div>
@@ -34,8 +26,12 @@
 <script>
 import { mapActions } from 'vuex';
 import router from '@/router';
+import NaverLoginBtn from '@/components/login/NaverLoginBtn.vue';
 
 export default {
+    components: {
+        NaverLoginBtn,
+    },
     data: function() {
         return {
             username: '',
