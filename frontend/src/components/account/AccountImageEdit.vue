@@ -1,0 +1,156 @@
+<template>
+    <div class="account-image">
+        <div class="account-image__image-box" 
+            @mouseenter="showBtn = true"
+            @mouseleave="showBtn = false">
+            <user-image 
+                :id="getUid"
+                :isLoading="isLoading"
+                @error="handleUserImageError()"
+                class="account-image__image"></user-image>
+            <div 
+                v-if="showBtn && !isLoading"
+                class="account-image__hide">
+                <button @click="$refs.file.click()" class="pointer">
+                    수정
+                    <input 
+                        type="file" 
+                        ref="file" 
+                        @change="uploadImage($event)" 
+                        accept="image/png">
+                </button>
+                <button 
+                    v-if="showDeleteBtn"
+                    @click="deleteImage()"
+                    class="pointer">삭제</button>
+            </div>
+        </div>
+        <span>{{ getUsername }}</span>
+        <image-crop-modal 
+            ref="cropModal"
+            v-show="showModal"
+            @showModal="showModal = true"
+            @closeModal="closeModal()"
+            @loading="loading()"
+            @complete="complete()"></image-crop-modal>
+    </div>
+</template>
+
+<script>
+import UserImage from '@/components/common/UserImage.vue';
+import ImageCropModal from './AccountImageCropModal.vue';
+import { mapGetters, mapMutations } from 'vuex';
+import api from '@/api/AccountImageApi.js';
+
+export default {
+    components: {
+        UserImage,
+        ImageCropModal,
+    },
+    data: function() {
+        return {
+            showBtn: false,
+            showModal: false,
+            isLoading: false,
+            showDeleteBtn: true,
+        };
+    },
+    computed: {
+        ...mapGetters([
+            'getUid',
+            'getUsername'
+        ]),
+    },
+    methods: {
+        ...mapMutations(['user', 'changeImageLoadingState']
+        ),
+        loading() {
+            this.isLoading = true;
+            this.showDeleteBtn = true;
+            this.changeImageLoadingState(true);
+        },
+        complete() {
+            this.isLoading = false;
+            this.changeImageLoadingState(false);
+        },
+        uploadImage(event) {
+            const { files } = event.target;
+            if (files && files[0]) {
+                this.$refs.cropModal.loadImage(files);
+            }
+        },
+        async deleteImage() {
+            this.loading();
+            await api.remove()
+                .catch((error) => {
+                    console.log(error.response);
+                });
+            this.complete();
+        },
+        closeModal() {
+            this.showModal = false;
+            this.files = null;
+        },
+        handleUserImageError() {
+            this.showDeleteBtn = false;
+        },
+    }
+}
+</script>
+
+<style scoped>
+.account-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.account-image span {
+    font-size: 26px;
+    font-weight: 500;
+}
+.account-image__image-box {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+.account-image__image {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto 10px;
+}
+.account-image__hide {
+    display: inline-block;
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #00000086;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 25px 20px;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+.account-image__hide button {
+    width: 60px;
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+    background: transparent;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+.account-image__hide button:last-child {
+    margin-bottom: 0;
+}
+.account-image__hide button:hover{
+    background: #ffffff;
+    color: #000;
+}
+.account-image__hide input {
+    display: none;
+}
+</style>
