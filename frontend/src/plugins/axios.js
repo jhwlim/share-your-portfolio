@@ -5,7 +5,7 @@ import store from '@/store';
 const tokenHeader = process.env.VUE_APP_JWT_HEADER;
 
 axios.defaults.baseURL = '/api';
-axios.defaults.headers['Content-Type'] = 'application/json';
+axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8';
 
 axios.interceptors.request.use(config => {
     const token = AuthUtil.getToken();

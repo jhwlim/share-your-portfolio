@@ -24,6 +24,7 @@ import com.spring.api.global.security.exception.AuthenticationIOException;
 import com.spring.api.global.security.model.LoginDetails;
 import com.spring.api.global.security.model.LoginRequest;
 import com.spring.api.global.security.model.LoginResponse;
+import com.spring.api.global.security.model.SocialLoginRequest;
 
 import lombok.extern.log4j.Log4j;
 
@@ -48,17 +49,25 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
 		log.info("attempt login...");
-		
-		LoginRequest loginRequest = null;
+		SocialLoginRequest loginRequest = null;
 		try {
-			loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
-		} catch (IOException e) {
-			log.warn(e);	
-			throw new AuthenticationIOException();
+			loginRequest = objectMapper.readValue(request.getReader(), SocialLoginRequest.class);
+			log.info(loginRequest);
+		} catch (Exception e) {
+			log.warn(e.getMessage());
 		}
-	
-		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
-		return getAuthenticationManager().authenticate(authToken);
+		
+		return null;
+//		LoginRequest loginRequest = null;
+//		try {
+//			loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
+//		} catch (IOException e) {
+//			log.warn(e);	
+//			throw new AuthenticationIOException();
+//		}
+//	
+//		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+//		return getAuthenticationManager().authenticate(authToken);
 	}
 	
 	@Override

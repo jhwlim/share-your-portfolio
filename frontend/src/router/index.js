@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 import MainView from '@/views/MainView.vue';
 import LoginView from '@/views/LoginView.vue';
 import TestView from '@/views/TestView.vue';
+import NaverCallback from '@/components/login/NaverCallback.vue';
 import store from '@/store';
 
 Vue.use(VueRouter);
@@ -34,6 +35,11 @@ const router = new VueRouter({
             meta: {
                 hasHeaderNav: false,
             } 
+        },
+        {
+            path: '/login/naver',
+            name: 'naverCallback',
+            component: NaverCallback,
         },
     ]
 });

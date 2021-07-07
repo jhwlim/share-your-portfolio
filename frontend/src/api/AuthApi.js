@@ -31,8 +31,23 @@ const refreshToken = async () => {
     return token;
 };
 
+const socialLogin = async ({email, name}) => {
+    const url = '/login';
+    const data = {
+        email,
+        name,
+    };
+    return await axios.post(url, data)
+                    .then(response => {
+                        const token = response.data.token;
+                        AuthUtil.saveToken(token);
+                        return token;
+                    });
+};
+
 export default {
     login,
     logout,
     refreshToken,
+    socialLogin,
 };

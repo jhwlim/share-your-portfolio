@@ -37,6 +37,13 @@ const mutations = {
 };
 
 const actions = {
+    async socialLogin(context, {email, name}) {
+        return await AuthApi.socialLogin({email, name})
+                            .then((token) => {
+                                const userInfo = AuthUtil.getUserInfo(token);
+                                context.commit('setUserInfo', userInfo);
+                            })
+    },
     async login(context, {username, password}) {
         return await AuthApi.login({username, password})
                             .then((token) => {
