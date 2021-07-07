@@ -11,6 +11,7 @@ import lombok.Getter;
 public class Account {
 
 	private int id;
+	private String email;
 	private String name;
 	private String password;
 	private Date createdDate;
