@@ -22,5 +22,14 @@
 			name = #{name}
 	</select>
 	
+	<select id="findAccountByEmail" resultType="Account">
+		SELECT
+			*
+		FROM
+			accounts
+		WHERE
+			email = #{email}
+	</select>
+	
 </mapper>
 

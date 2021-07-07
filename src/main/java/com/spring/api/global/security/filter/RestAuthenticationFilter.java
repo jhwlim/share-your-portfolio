@@ -16,8 +16,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.api.domain.account.service.AccountFindService;
+import com.spring.api.domain.account.service.AccountService;
 import com.spring.api.domain.auth.service.JwtService;
 import com.spring.api.domain.auth.service.RefreshTokenService;
+import com.spring.api.domain.model.Account;
 import com.spring.api.domain.model.RefreshToken;
 import com.spring.api.global.error.model.ErrorResponse;
 import com.spring.api.global.security.exception.AuthenticationIOException;
@@ -40,6 +43,12 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 	private ObjectMapper objectMapper = new ObjectMapper();
 
 	@Autowired
+	private AccountFindService accountFindService;
+	
+	@Autowired
+	private AccountService accountService;
+	
+	@Autowired
 	private JwtService jwtService;
 
 	@Autowired
@@ -53,6 +62,15 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 		try {
 			loginRequest = objectMapper.readValue(request.getReader(), SocialLoginRequest.class);
 			log.info(loginRequest);
+			Account account = accountFindService.findAccountByEmail(loginRequest.getEmail());
+			if (account == null) {
+				account = Account.builder()
+						   .socialLoginRequest(loginRequest)
+						   .build();
+				accountService.register(account);	
+			} 
+			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(account.getEmail(), null);
+			return authToken;
 		} catch (Exception e) {
 			log.warn(e.getMessage());
 		}
@@ -74,7 +92,7 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
 		log.info("login success!");
-		
+		log.info(authResult.getPrincipal());
 		LoginDetails user = (LoginDetails) authResult.getPrincipal();
 		String accessToken = jwtService.generateToken(user.getId(), user.getUsername());
 		RefreshToken refreshToken = refreshTokenService.generateRefreshToken(user.getId());

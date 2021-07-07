@@ -4,6 +4,9 @@ import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
 
+import com.spring.api.global.security.model.SocialLoginRequest;
+
+import lombok.Builder;
 import lombok.Getter;
 
 @Alias("Account")
@@ -16,4 +19,9 @@ public class Account {
 	private String password;
 	private Date createdDate;
 	
+	@Builder
+	public Account(SocialLoginRequest socialLoginRequest) {
+		this.email = socialLoginRequest.getEmail();
+		this.name = socialLoginRequest.getName();
+	}
 }

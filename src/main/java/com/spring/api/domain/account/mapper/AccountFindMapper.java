@@ -8,4 +8,6 @@ public interface AccountFindMapper {
 	
 	public Account findAccountById(int id);
 	
+	public Account findAccountByEmail(String email);
+	
 }

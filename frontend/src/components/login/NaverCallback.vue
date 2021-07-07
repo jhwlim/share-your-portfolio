@@ -25,7 +25,6 @@ export default {
                 if (status) {
                     const email = naverLogin.user.email;
                     const name = naverLogin.user.name;
-                    
                     this.socialLogin({email, name});
                     router.replace('/');
                 }
