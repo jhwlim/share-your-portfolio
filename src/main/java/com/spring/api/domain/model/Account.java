@@ -19,6 +19,10 @@ public class Account {
 	private String password;
 	private Date createdDate;
 	
+	public Account() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	@Builder
 	public Account(SocialLoginRequest socialLoginRequest) {
 		this.email = socialLoginRequest.getEmail();

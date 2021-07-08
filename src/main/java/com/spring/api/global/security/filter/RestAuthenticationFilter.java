@@ -13,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,7 +62,6 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 		SocialLoginRequest loginRequest = null;
 		try {
 			loginRequest = objectMapper.readValue(request.getReader(), SocialLoginRequest.class);
-			log.info(loginRequest);
 			Account account = accountFindService.findAccountByEmail(loginRequest.getEmail());
 			if (account == null) {
 				account = Account.builder()
@@ -69,30 +69,21 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 						   .build();
 				accountService.register(account);	
 			} 
-			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(account.getEmail(), null);
+			LoginDetails loginDetails = new LoginDetails(account);
+			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginDetails, null);
+			SecurityContextHolder.getContext().setAuthentication(authToken);
 			return authToken;
 		} catch (Exception e) {
-			log.warn(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		return null;
-//		LoginRequest loginRequest = null;
-//		try {
-//			loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
-//		} catch (IOException e) {
-//			log.warn(e);	
-//			throw new AuthenticationIOException();
-//		}
-//	
-//		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
-//		return getAuthenticationManager().authenticate(authToken);
 	}
 	
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
 		log.info("login success!");
-		log.info(authResult.getPrincipal());
 		LoginDetails user = (LoginDetails) authResult.getPrincipal();
 		String accessToken = jwtService.generateToken(user.getId(), user.getUsername());
 		RefreshToken refreshToken = refreshTokenService.generateRefreshToken(user.getId());
@@ -100,7 +91,6 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 		LoginResponse loginResponse = LoginResponse.builder()
 											.token(accessToken)
 											.build();
-
 		response.setContentType(RESPONSE_CONTENT_TYPE);
 		response.getWriter().println(objectMapper.writeValueAsString(loginResponse));
 		response.addCookie(refreshTokenService.createRefreshTokenCookie(refreshToken));

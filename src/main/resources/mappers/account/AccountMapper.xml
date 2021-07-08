@@ -8,13 +8,11 @@
 		INSERT INTO
 			accounts (
 				email,
-				name,
-				password
+				name
 			)
 		VALUES (
 				#{email},
-				#{name},
-				#{password}
+				#{name}
 			)
 	</insert>
 	

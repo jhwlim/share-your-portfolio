@@ -17,7 +17,7 @@ public class LoginDetails implements UserDetails {
 	
 	public LoginDetails(Account account) {
 		this.id = account.getId();
-		this.username = account.getName();
+		this.username = account.getEmail();
 		this.password = account.getPassword();
 	}
 	
