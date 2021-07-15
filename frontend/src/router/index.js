@@ -7,6 +7,7 @@ import PostView from '@/views/PostView.vue';
 import AccountView from '@/views/AccountView.vue';
 import TestView from '@/views/TestView.vue';
 import store from '@/store';
+import PostFile from "@/views/PostFile.vue"
 
 Vue.use(VueRouter);
 
@@ -46,6 +47,7 @@ const router = new VueRouter({
                 hasHeaderNav: false,
             } 
         },
+        { path: "/post", component: PostFile},
     ]
 });
 
