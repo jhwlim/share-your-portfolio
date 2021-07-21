@@ -177,8 +177,7 @@ export default {
                     if(res.status === 200){
                         alert("파일 업로드가 완료되었습니다.");
                         this.closeModal();
-                    }
-                    
+                    }       
                 })
                 .catch(error =>{
 
@@ -191,7 +190,6 @@ export default {
                 })
                
             }
-
             this.title = '';
             this.content = '';
             this.category = '';
