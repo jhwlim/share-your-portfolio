@@ -11,53 +11,56 @@
                 <div slot="body" class="modal__body">
                     <div class="upload-page">
                         <form v-on:submit.prevent="onUpload">
-
-                        <div class="input-box">            
-                            <span class="details">Title</span>
-                            <input v-model="title" required>
-                        </div>
-
-                        <div class="input-box">            
-                            <span class="details">Content</span>            
-                            <textarea v-model="content"></textarea>
-                        </div>
-
-                        <div class="category-details">
-                            <input type="radio" name="category" id="dot-1" value="IT" v-model="category" required>
-                            <input type="radio" name="category" id="dot-2" value="Design" v-model="category">
-                            <input type="radio" name="category" id="dot-3" value="architect" v-model="category">
-                            <input type="radio" name="category" id="dot-4" value="Marketing" v-model="category">
-                            <input type="radio" name="category" id="dot-5" value="Accounting" v-model="category">
-
-                            <span class="category-title">Category</span>
-                            <div class="category">
-                                <label for="dot-1">             
-                                    <span class="list-of-category">IT</span>
-                                    <span class="dot one"></span>
-                                </label>
-                                <label for="dot-2">
-                                    <span class="list-of-category">Design</span>
-                                    <span class="dot two"></span>
-                                </label>
-                                <label for="dot-3">
-                                    <span class="list-of-category">Architect</span>
-                                    <span class="dot three"></span>
-                                </label>
-                                <label for="dot-4">
-                                    <span class="list-of-category">Marketing</span>
-                                    <span class="dot four"></span>
-                                </label>
-                                <label for="dot-5">
-                                    <span class="list-of-category">Accounting</span>
-                                    <span class="dot five"></span>
-                                </label>
+                        
+                        <div class="modal-inside">
+                            <div class="input-box">            
+                                <span class="details">Title</span>
+                                <input v-model="title" placeholder="type the title of portfolio" required>
                             </div>
-                        </div>
 
-                        <div class="filebox"> 
-                            <input class="upload-name" value="파일선택" v-model="fileName" disabled="disabled"> 
-                            <label for="ex_filename">Post</label> 
-                            <input type="file" @change="onFileSelected" ref="fileInput" id="ex_filename" class="upload-hidden"> 
+                            <div class="input-box">            
+                                <span class="details">Content</span>            
+                                <textarea v-model="content" placeholder="summarize your content of portfolio"></textarea>
+                            </div>
+
+                            <div class="category-details">
+                                <input type="radio" name="category" id="dot-1" value="IT" v-model="category">
+                                <input type="radio" name="category" id="dot-2" value="Design" v-model="category">
+                                <input type="radio" name="category" id="dot-3" value="architect" v-model="category">
+                                <input type="radio" name="category" id="dot-4" value="Marketing" v-model="category">
+                                <input type="radio" name="category" id="dot-5" value="Accounting" v-model="category">
+
+                                <span class="category-title">Category</span>
+                                <div class="category">
+                                    <label for="dot-1">             
+                                        <span class="list-of-category">IT</span>
+                                        <span class="dot one"></span>
+                                    </label>
+                                    <label for="dot-2">
+                                        <span class="list-of-category">Design</span>
+                                        <span class="dot two"></span>
+                                    </label>
+                                    <label for="dot-3">
+                                        <span class="list-of-category">Architect</span>
+                                        <span class="dot three"></span>
+                                    </label>
+                                    <label for="dot-4">
+                                        <span class="list-of-category">Marketing</span>
+                                        <span class="dot four"></span>
+                                    </label>
+                                    <label for="dot-5">
+                                        <span class="list-of-category">Accounting</span>
+                                        <span class="dot five"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="filebox"> 
+                                <span class="filebox-title">Upload pdf file only</span>
+                                <input class="upload-name" value="파일선택" v-model="fileName" disabled="disabled"> 
+                                <label for="ex_filename">Post</label> 
+                                <input type="file" @change="onFileSelected" ref="fileInput" id="ex_filename" class="upload-hidden"> 
+                            </div>
                         </div>
                         
                         <div class="list-of-button">
@@ -75,13 +78,10 @@
 
 </template>
 
-
-
 <script>
 import axios from 'axios';
 import { mapGetters } from 'vuex';
 import MyModal from '@/components/common/CommonModal.vue';
-
 
 var regex = new RegExp("pdf$", 'i');
 var maxSize = 5242880; //5MB
@@ -94,8 +94,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters(['getUid']),
-        
+        ...mapGetters(['getUid']),   
     },
 
     data(){
@@ -103,9 +102,8 @@ export default {
             showModal: false,
             selectedFile: null,
             fileName: '',
-            
-            title : "type the title of portfolio",
-            content : "summarize your content of portfolio",
+            title : '',
+            content : '',
             category: '',
         }
     },
@@ -116,6 +114,11 @@ export default {
         },
         closeModal() {
         this.showModal = false;
+        this.title = '';
+        this.content = '';
+        this.category = '';
+        this.selectedFile = null;
+        this.fileName= '';   
         },
 
        checkExtension(fileName, fileSize){
@@ -142,8 +145,10 @@ export default {
             const fd = new FormData();
             
             if(!this.checkExtension(this.selectedFile.name, this.selectedFile.size)){
+                
                 return false;
             }
+
             else{
 
             fd.append('title', this.title);
@@ -168,10 +173,30 @@ export default {
                 
             })
                 .then(res =>{
-                    console.log(JSON.stringify(res));
+
+                    if(res.status === 200){
+                        alert("파일 업로드가 완료되었습니다.");
+                        this.closeModal();
+                    }
+                    
                 })
+                .catch(error =>{
+
+                    if(error.response.status === 404){
+                        alert('필수 정보가 입력되지 않았습니다. 다시 한번 확인해주세요.')
+                    }
+                    else if(error.response.status === 400){
+                        alert("올바르지 않은 파일입니다. 다시 한번 확인해주세요.");
+                    }
+                })
+               
             }
-            
+
+            this.title = '';
+            this.content = '';
+            this.category = '';
+            this.selectedFile = null;
+            this.fileName= '';           
         },
 
     }
@@ -219,6 +244,10 @@ export default {
     margin-top: 30px;   
 }
 
+.modal-inside{
+    margin-left: 50px;
+}
+
 #upload-button{
     cursor: pointer;
 }
@@ -255,12 +284,17 @@ export default {
   border: 1px solid #ccc;
   border-bottom-width: 2px;
   transition: all 0.3s ease;
+  resize:none;
 }
 
 .input-box input:focus,
 .input-box textarea:focus
 {
   border-color: black;
+}
+
+.category-details{
+    margin-bottom: 30px;
 }
 
 .category-title{
@@ -299,6 +333,7 @@ export default {
  }
  form input[type="radio"]{
    display: none;
+   
  }
 
 #post-button {
@@ -330,6 +365,11 @@ export default {
     display: flex;
     justify-content:center;
 }
+
+.filebox-title{
+  font-size: 20px;
+  font-weight: 500;
+ }
 
 .filebox input[type="file"] {
      position: absolute; 

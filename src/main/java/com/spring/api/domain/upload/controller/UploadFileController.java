@@ -38,6 +38,7 @@ public class UploadFileController {
 	@Value("${image.path.root}")
 	private String root;
 		
+	
 	@RequestMapping(value="/post/uploadFile", method = RequestMethod.POST)
 	public ResponseEntity<?> uploadFiles(@ModelAttribute Post post){
 						
@@ -50,12 +51,12 @@ public class UploadFileController {
 			
 		AttachFileDTO attachDTO = new AttachFileDTO();
 		
-		if(user == 0 || category == null || title == null) {
-			return new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
+		if(user == 0 || (category == null || category.trim().isEmpty() || (title == null || title.trim().isEmpty()))) {
+			return new ResponseEntity<>("fail", HttpStatus.NOT_FOUND);
 		}
 						
 		if(file.isEmpty() || file == null) {
-			return new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);		
+			return new ResponseEntity<>("fail", HttpStatus.NOT_FOUND);		
 		}
 		
 		else if(service.checkExtension(file) != "pdf") {
