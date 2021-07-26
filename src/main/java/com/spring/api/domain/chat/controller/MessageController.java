@@ -10,28 +10,28 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.api.domain.account.service.AccountFindService;
 import com.spring.api.domain.chat.model.MessageModel;
-import com.spring.api.domain.chat.service.MessageSaveService;
+import com.spring.api.domain.chat.service.MessageManageService;
 
+import lombok.extern.log4j.Log4j;
+
+@Log4j
 @RestController
 public class MessageController {
 	
 	@Autowired
-	MessageSaveService service;
+	MessageManageService service;
 	
-	@Autowired
-	AccountFindService serviceAF;
-
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
 		
 	@MessageMapping("/chat/{senderId}/{receiverId}")
 	public void sendMessage(@DestinationVariable int senderId, @DestinationVariable int receiverId, MessageModel message) {
 			
-		System.out.println("handling send message: " + message);
+		log.info("handling send message: " + message);
 		
 		service.saveMessage(message);
 				
-		Date messageTime = service.checkTime(message.getContent());
+		Date messageTime = service.checkTime(message.getMessageNo());
 		
 		message.setCreateDate(messageTime);
 				

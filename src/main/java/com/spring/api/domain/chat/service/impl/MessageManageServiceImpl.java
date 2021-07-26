@@ -6,15 +6,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.spring.api.domain.chat.mapper.MessageSaveMapper;
+import com.spring.api.domain.chat.mapper.MessageManageMapper;
 import com.spring.api.domain.chat.model.MessageModel;
-import com.spring.api.domain.chat.service.MessageSaveService;
+import com.spring.api.domain.chat.model.UserListDTO;
+import com.spring.api.domain.chat.service.MessageManageService;
 
 @Service
-public class MessageSaveServiceImpl implements MessageSaveService{
+public class MessageManageServiceImpl implements MessageManageService{
 
 	@Autowired
-	MessageSaveMapper mapper;
+	MessageManageMapper mapper;
 	
 	@Override
 	public void saveMessage(MessageModel msgModel) {
@@ -29,8 +30,15 @@ public class MessageSaveServiceImpl implements MessageSaveService{
 	}
 
 	@Override
-	public Date checkTime(String content) {
+	public Date checkTime(int messageNo) {
 		
-		return mapper.checkTime(content);
+		return mapper.checkTime(messageNo);
 	}
+	
+	@Override
+	public List<UserListDTO> bringUserList(int userId) {
+		
+		return mapper.bringUserList(userId);
+	}
+
 }
