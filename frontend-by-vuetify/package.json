@@ -14,6 +14,7 @@
     "sockjs-client": "^1.5.2",
     "stompjs": "^2.3.3",
     "vue": "^2.6.11",
+    "vue-advanced-cropper": "^1.8.2",
     "vue-router": "^3.5.2",
     "vuetify": "^2.5.8",
     "vuex": "^3.6.2"

@@ -10,9 +10,14 @@
                     <v-card elevation="0" class="py-10">
                         <div class="mx-auto" style="position: relative; width: 100px;">
                             <user-image 
+                                v-if="!isLoading"
                                 :id="user.id"
                                 :size="100"
                             ></user-image>
+                            <v-img
+                                v-else
+                                :src="require('@/assets/images/loading.gif')"
+                            ></v-img>
 
                             <v-fade-transition>
                                 <v-overlay
@@ -20,13 +25,44 @@
                                     absolute
                                     class="rounded-lg"
                                 >
-                                    <v-btn outlined dark>수정</v-btn>
+                                    <v-btn outlined dark block class="mb-1" @click="inputFile()">수정</v-btn>
+                                    <v-btn outlined dark block @click="removeImage()">삭제</v-btn>
+                                
+                                    <v-file-input 
+                                        v-model="image.file"
+                                        accept=".png"
+                                        ref="file"
+                                        style="display: none;"
+                                        @change="openCropModal"
+                                    />
                                 </v-overlay>
                             </v-fade-transition>
                         </div>
                     </v-card>
                 </template>
             </v-hover>
+
+            <v-dialog v-model="showCropModal">
+                <v-card>
+                    <v-card-title>
+                        Crop your profile picture
+                    </v-card-title>
+                
+                    <v-card-text>
+                        <cropper
+                            :src="image.src"
+                            :stencil-component="$options.components.CircleStencil"
+                            :stencil-props="{ aspectRatio: 1/1 }"
+                            @change="moveCooridate"
+                            class="cropper"
+                        ></cropper>
+                    </v-card-text>
+                
+                    <v-card-actions>
+                        <v-btn block color="primary" @click="uploadImage">Upload Image</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
 
             <v-card elevation="0" width="300" class="mx-auto">
                 <v-card-text>
@@ -87,13 +123,41 @@
 </template>
 
 <script>
+/* eslint-disable*/
 import UserImage from '@/components/UserImage.vue';
+import { Cropper, CircleStencil } from 'vue-advanced-cropper';
+import 'vue-advanced-cropper/dist/style.css';
 import { mapState } from 'vuex';
+import AccountApi from '@/api/AccountApi.js';
+
+function getMimeType(file, fallback = null) {
+	const byteArray = (new Uint8Array(file)).subarray(0, 4);
+    let header = '';
+    for (let i = 0; i < byteArray.length; i++) {
+       header += byteArray[i].toString(16);
+    }
+	switch (header) {
+        case "89504e47":
+            return "image/png";
+        case "47494638":
+            return "image/gif";
+        case "ffd8ffe0":
+        case "ffd8ffe1":
+        case "ffd8ffe2":
+        case "ffd8ffe3":
+        case "ffd8ffe8":
+            return "image/jpeg";
+        default:
+            return fallback;
+    }
+}
 
 export default {
     name: 'AccountView',
     components: {
         UserImage,
+        Cropper,
+        CircleStencil,
     },
     data: function() {
         return {
@@ -112,7 +176,15 @@ export default {
                newPasswordConfirmation: [
                    value => value === this.passwordChangeForm.newPassword || '비밀번호가 일치하지 않습니다.',
                ],
-           }
+           },
+           image: {
+               src: null,
+               type: null,
+               file: null,
+               coordinates: null,
+           },
+           showCropModal: false,
+           isLoading: false,
         }
     },
     computed: {
@@ -126,6 +198,60 @@ export default {
         },
         submitChangePasswordForm() {
             this.validate();
+        },
+        inputFile() {
+            this.$refs.file.$refs.input.click();
+        },
+        openCropModal(file) {
+            if (file) {
+                if (this.image.src) {
+                    URL.revokeObjectURL(this.image.src);
+                }
+
+                const reader = new FileReader();
+                const blob = URL.createObjectURL(file);
+
+                reader.onload = (e) => {
+                    this.image.src = blob;
+                    this.image.type = getMimeType(e.target.result, file.type);
+                    const type = this.image.type;
+                    if (type !== 'image/png') {
+                        alert('Only accept PNG!');
+                        return;
+                    }
+                    
+                    this.showCropModal = true;
+                }
+
+                reader.readAsArrayBuffer(file);
+            }
+        },
+        moveCooridate({coordinates}) {
+            this.image.coordinates = coordinates;
+        },
+        uploadImage() {
+            this.showCropModal = false;
+            this.isLoading = true;
+
+            const form = new FormData();
+            form.append('file', this.image.file);
+            const coordinates = this.image.coordinates;
+            Object.keys(coordinates).forEach(key => {
+                form.append(key, coordinates[key]);
+            });
+
+            AccountApi.uploadImage(form)
+                .finally(() => {
+                    this.isLoading = false;
+                });
+        },
+        removeImage() {
+            this.isLoading = true;
+
+            AccountApi.removeImage()
+                .finally(() => {
+                    this.isLoading = false;
+                });
         }
     }
 }
