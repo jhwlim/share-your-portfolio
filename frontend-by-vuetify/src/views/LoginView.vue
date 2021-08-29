@@ -9,6 +9,7 @@
                 ></v-text-field>
                 <v-text-field 
                     label="비밀번호"
+                    type="password"
                     v-model="loginForm.password"
                     :rules="rules.password"
                 ></v-text-field>
@@ -20,6 +21,7 @@
                     block 
                     color="primary"
                     class="my-2"
+                    @click="submitLoginForm"
                 >
                     로그인
                 </v-btn>
@@ -38,6 +40,7 @@
 
 <script>
 import CenterCard from '@/components/layout/CenterCard.vue';
+import { mapActions } from 'vuex';
 
 export default {
     name: 'LoginView',
@@ -60,5 +63,20 @@ export default {
             }
         }
     },
+    methods: {
+        ...mapActions({
+            login: 'user/login', 
+        }),
+        submitLoginForm() {
+            this.login(this.loginForm)
+                .then(() => {
+                    alert('로그인 성공');
+                    this.$router.push('/');
+                })
+                .catch(() => {
+                    alert('아이디 또는 비밀번호가 일치하지 않습니다.');
+                });
+        }
+    }
 }
 </script>

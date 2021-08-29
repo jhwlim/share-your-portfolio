@@ -1,6 +1,8 @@
 import MainView from '@/views/MainView.vue';
 import LoginView from '@/views/LoginView.vue';
 import SignupView from '@/views/SignupView.vue';
+import AccountView from '@/views/AccountView.vue';
+import MessageView from '@/views/MessageView.vue';
 
 const routes = [
     {
@@ -17,6 +19,16 @@ const routes = [
         path: '/signup',
         name: 'signup',
         component: SignupView,
+    },
+    {
+        path: '/account',
+        name: 'account',
+        component: AccountView, 
+    },
+    {
+        path: '/message',
+        name: 'message',
+        component: MessageView,
     }
 ]
 
