@@ -16,7 +16,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class UserListDTO {
 	
-	private int user;
+	private int id;
 	private String name;
 	private String content;
 	private Date createDate;
