@@ -166,6 +166,11 @@ export default {
             .then(response => {
                 this.users = response.data;
             });
+        const id = this.$route.query.id;
+        const name = this.$route.query.name;
+        if (id && name && id !== this.userId) {
+            this.selectedUser = { id, name };
+        }
     }
 }
 </script>\

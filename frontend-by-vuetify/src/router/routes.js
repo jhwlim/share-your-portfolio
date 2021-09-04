@@ -3,6 +3,7 @@ import LoginView from '@/views/LoginView.vue';
 import SignupView from '@/views/SignupView.vue';
 import AccountView from '@/views/AccountView.vue';
 import MessageView from '@/views/MessageView.vue';
+import PostView from '@/views/PostView.vue';
 
 const routes = [
     {
@@ -29,6 +30,11 @@ const routes = [
         path: '/message',
         name: 'message',
         component: MessageView,
+    },
+    {
+        path: '/post/:id',
+        name: 'post',
+        component: PostView,
     }
 ]
 

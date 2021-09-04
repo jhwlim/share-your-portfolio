@@ -10,7 +10,66 @@
                 subheader
                 dense
             >
-                <v-subheader class="text-h6 px-4 font-weight-bold">All Posts</v-subheader>
+                <v-subheader class="text-h6 px-4 my-4 font-weight-bold justify-space-between">
+                    All Posts
+                    <v-btn
+                        color="red accent-2"
+                        class="white--text"
+                        elevation="0"
+                        @click="openArticleCreateModal"
+                    >게시물 등록</v-btn>
+                    <v-dialog v-model="showArticleCreateModal">
+                        <v-card>
+                            <v-card-title class="text-h4 justify-center">
+                                Flex Your PortFolio
+                            </v-card-title>
+
+                            <v-card-text>
+                                <v-form
+                                    ref="form"
+                                    v-model="articleForm.valid"
+                                >
+                                    <v-text-field
+                                        label="제목"
+                                        v-model="articleForm.title"
+                                        :rules="articleFormRules.title"
+                                    ></v-text-field>
+
+                                    <v-textarea
+                                        label="내용"
+                                        v-model="articleForm.content"
+                                        :rules="articleFormRules.content"
+                                        no-size
+                                    ></v-textarea>
+
+                                    <v-radio-group
+                                        label="Category"
+                                        v-model="articleForm.category"
+                                        row
+                                    >
+                                        <v-radio
+                                            v-for="(c, i) in categories" :key="i"
+                                            :label="c.label"
+                                            :value="c.value"
+                                        ></v-radio>
+                                    </v-radio-group>
+
+                                    <v-file-input
+                                        placeholder="pdf"
+                                        v-model="articleForm.file"
+                                        accept=".pdf"
+                                        :rules="articleFormRules.file"
+                                    ></v-file-input>
+                                </v-form>
+                            </v-card-text>
+
+                            <v-card-actions class="justify-center">
+                                <v-btn color="error" elevation="0" class="px-6" @click="closeArticleCreateModal">취소</v-btn>
+                                <v-btn color="success" elevation="0" class="px-6" @click="submitArticleForm">등록</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-subheader>
 
                 <v-list-item
                     v-for="post in posts"
@@ -23,6 +82,8 @@
                         <v-img
                             width="100%"
                             :src="require('@/assets/images/test/post.jpg')"
+                            @click="moveToArticle(post.id)"
+                            class="pointer"
                         ></v-img>
                     </v-list-item-avatar>
                     
@@ -30,21 +91,33 @@
                         class="align-start align-self-start"
                     >
                         <v-card flat>
-                            <v-container>
-                                <v-avatar size="36px">
-                                    <v-icon>
-                                        mdi-account-circle
-                                    </v-icon>
-                                </v-avatar>
+                            <v-container class="d-flex px-2">
+                                <v-menu bottom right rounded offset-y>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn icon v-on="on">
+                                            <user-image :id="post.writerId"></user-image>
+                                        </v-btn>
+                                    </template>
+                                    <v-card class="pa-1">
+                                        <v-btn text @click="moveToMessage(post.writerId, post.writer)">채팅하기</v-btn>
+                                    </v-card>
+                                </v-menu>
+                                <div class="mx-3 d-flex flex-column justify-space-between">
+                                    <span class="font-weight-bold">{{ post.writer }}</span>
+                                    <span class="font-weight-thin">{{ post.writeDate }}</span>
+                                </div>
                             </v-container>
 
-                            <v-card-title>
-                                Title
+                            <v-card-title 
+                                class="px-2 pointer" 
+                                @click="moveToArticle(post.id)"
+                            >
+                                {{ post.title }}
                             </v-card-title>
 
 
-                            <v-card-text>
-                                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quidem esse illum dolor tempore error commodi sequi maxime neque, officia eveniet recusandae facere molestias illo quibusdam cum aliquam voluptas necessitatibus? Aliquam.
+                            <v-card-text class="px-2">
+                                {{ post.content }}
                             </v-card-text>
 
                             <v-card-actions>
@@ -63,9 +136,7 @@
                                 </div>
                             </v-card-actions>
                         </v-card>
-                        
                     </v-list-item-content>
-
                 </v-list-item>
             </v-list>
         </v-sheet>
@@ -73,8 +144,13 @@
 </template>
 
 <script>
+import UserImage from '@/components/UserImage.vue';
+
 export default {
     name: 'MainView',
+    components: {
+        UserImage,
+    },
     data: function() {
         return {
            posts: [
@@ -106,12 +182,69 @@ export default {
                     isLiked: false,
                     image: '',
                 },
-            ], 
-        }
+            ],
+            showArticleCreateModal: false,
+            categories: [
+                {
+                    label: 'IT',
+                    value: 'it',
+                },
+                {
+                    label: 'Design',
+                    value: 'design',
+                },
+                {
+                    label: 'Architect',
+                    value: 'architect',
+                },
+                {
+                    label: 'Marketing',
+                    value: 'marketing',
+                },
+                {
+                    label: 'Accounting',
+                    value: 'accounting',
+                },
+            ],
+            articleForm: {
+                valid: false,
+                title: '',
+                content: '',
+                category: 'it',
+                file: null,
+            },
+            articleFormRules: {
+                title: [
+                    value => !!value || '제목을 입력해주세요.'
+                ],
+                content: [
+                    value => !!value || '내용을 입력해주세요.'
+                ],
+                file: [
+                    value => !!value || '파일을 등록해주세요.'
+                ]
+            }
+        };
     },
+    methods: {
+        moveToArticle(postId) {
+            this.$router.push(`/post/${postId}`);
+        },
+        moveToMessage(writerId, writer) {
+            this.$router.push(`/message?id=${writerId}&name=${writer}`)
+        },
+        openArticleCreateModal() {
+            this.showArticleCreateModal = true;
+        },
+        closeArticleCreateModal() {
+            this.showArticleCreateModal = false;
+        },
+        validateArticleForm() {
+            this.$refs.form.validate();
+        },
+        submitArticleForm() {
+            this.validateArticleForm();
+        }
+    }
 }
 </script>
-
-<style>
-
-</style>
