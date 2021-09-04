@@ -16,6 +16,7 @@
 		SELECT * 
 		FROM messages 
 		WHERE sender_id = #{senderId} AND receiver_id = #{receiverId} OR sender_id = #{receiverId} AND receiver_id = #{senderId}
+		ORDER BY message_no ASC
 	</select>
 	
 	<select id="checkTime" resultType="java.util.Date">
@@ -26,7 +27,7 @@
 	</select>
 	
 	<select id="bringUserList" resultType="UserList">
-		SELECT  t.user AS "user", t.content AS "content", accounts.name AS "name", t.create_date AS "create_date" FROM
+		SELECT  t.user AS "id", t.content AS "content", accounts.name AS "name", t.create_date AS "create_date" FROM
 			(SELECT content, create_date, 
 					CASE WHEN messages.sender_id = #{userId} THEN messages.receiver_id 
 						 WHEN messages.receiver_id = #{userId} THEN messages.sender_id 
