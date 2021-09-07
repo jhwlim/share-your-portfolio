@@ -13,12 +13,13 @@
                 <v-subheader class="text-h6 px-4 my-4 font-weight-bold justify-space-between">
                     All Posts
                     <v-btn
+                        v-if="isAuth"
                         color="red accent-2"
                         class="white--text"
                         elevation="0"
                         @click="openArticleCreateModal"
                     >게시물 등록</v-btn>
-                    <v-dialog v-model="showArticleCreateModal">
+                    <v-dialog v-model="showArticleCreateModal" max-width="720">
                         <v-card>
                             <v-card-title class="text-h4 justify-center">
                                 Flex Your PortFolio
@@ -145,6 +146,8 @@
 
 <script>
 import UserImage from '@/components/UserImage.vue';
+import { mapState, mapGetters } from 'vuex';
+import PostApi from '@/api/PostApi.js';
 
 export default {
     name: 'MainView',
@@ -226,6 +229,14 @@ export default {
             }
         };
     },
+    computed: {
+        ...mapState({
+            userId: state => state.user.user.id,
+        }),
+        ...mapGetters({
+            isAuth: 'user/isAuth',
+        }),
+    },
     methods: {
         moveToArticle(postId) {
             this.$router.push(`/post/${postId}`);
@@ -240,11 +251,27 @@ export default {
             this.showArticleCreateModal = false;
         },
         validateArticleForm() {
-            this.$refs.form.validate();
+            const valid =  this.$refs.form.validate();
+            this.articleForm.valid = valid;
+            return valid;
         },
         submitArticleForm() {
-            this.validateArticleForm();
+            if (!this.validateArticleForm()) {
+                return;
+            }
+
+            this.closeArticleCreateModal();
+            this.articleForm.writerId = this.userId;
+
+            PostApi.savePost(this.articleForm)
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
         }
-    }
+    },
 }
 </script>
