@@ -2,11 +2,13 @@ package com.spring.api.domain.upload.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -25,9 +27,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spring.api.domain.model.Post;
 import com.spring.api.domain.upload.dto.AttachFileDTO;
 import com.spring.api.domain.upload.service.UploadService;
+import com.spring.api.domain.upload.service.impl.UploadServiceImpl;
 
+import jdk.internal.org.jline.utils.Log;
 import lombok.extern.log4j.Log4j;
 
+@Log4j
 @RestController
 @CrossOrigin
 public class UploadFileController {
@@ -38,11 +43,12 @@ public class UploadFileController {
 	@Value("${image.path.root}")
 	private String root;
 		
-	
 	@RequestMapping(value="/post/uploadFile", method = RequestMethod.POST)
 	public ResponseEntity<?> uploadFiles(@ModelAttribute Post post){
 						
 		MultipartFile file = post.getFile();
+		
+		InputStream  inputStream;
 		
 		int user = post.getWriterId();
 		
@@ -55,17 +61,38 @@ public class UploadFileController {
 			return new ResponseEntity<>("fail", HttpStatus.NOT_FOUND);
 		}
 						
-		if(file.isEmpty() || file == null) {
+		else if(file.isEmpty() || file == null) {
 			return new ResponseEntity<>("fail", HttpStatus.NOT_FOUND);		
 		}
 		
-		else if(service.checkExtension(file) != "pdf") {
-			return new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
+		else {		
+			try {
+				inputStream = file.getInputStream();
+				
+				Tika tika = new Tika();
+				
+				String mimeType = tika.detect(inputStream);
+				
+				if(!service.isAllowedMIMEType(mimeType)) {
+					return new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
+				}
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 				
-		if(file != null) {
-			service.createPdf(post, attachDTO);		
-		}
+		try {
+			service.createPdf(post, attachDTO);
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			
+			log.info("예외 발생" + e);
+			
+			return new ResponseEntity<>("fail", HttpStatus.CONFLICT);
+		}		
 						
 		return new ResponseEntity<>("success", HttpStatus.OK);
 	}
