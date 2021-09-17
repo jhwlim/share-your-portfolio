@@ -122,7 +122,7 @@ public class UploadFileController {
 		
 		int fileNo = service.searchFileNo(temPost);
 		
-		String filePath = root + File.separator + service.searchFilePath(fileNo) + File.separator + imageNo + ".png";
+		String filePath = service.searchFilePath(fileNo) + File.separator + imageNo + ".png";
 				
 		in = new FileInputStream(filePath);
 		
