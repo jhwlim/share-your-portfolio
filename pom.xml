@@ -208,10 +208,10 @@
 		    <version>2.0.13</version>
 		</dependency>
 		
-		<!-- Simple Magic -->
+		<!-- Tika: Check MIME type of files -->
 		<dependency>
-		    <groupId>com.j256.simplemagic</groupId>
-		    <artifactId>simplemagic</artifactId>
+		    <groupId>org.apache.tika</groupId>
+		    <artifactId>tika-core</artifactId>
 		    <version>1.14</version>
 		</dependency>
 		

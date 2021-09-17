@@ -187,6 +187,10 @@ export default {
                     else if(error.response.status === 400){
                         alert("올바르지 않은 파일입니다. 다시 한번 확인해주세요.");
                     }
+
+                    else if(error.response.status === 409){
+                        alert("업로드 중 서버에서 문제가 발생하여 업로드에 실패하였습니다.")
+                    }
                 })
                
             }

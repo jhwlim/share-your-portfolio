@@ -7,9 +7,9 @@ import com.spring.api.domain.upload.dto.AttachFileDTO;
 
 public interface ManagePostMapper {
 
-	public void uploadFiles(AttachFileDTO attachDTO);
+	public void uploadFiles(AttachFileDTO attachDTO) throws Exception;
 	
-	public void savePosts(Post post);
+	public void savePosts(Post post) throws Exception;
 	
 	public List<Post> bringPostList();
 	
