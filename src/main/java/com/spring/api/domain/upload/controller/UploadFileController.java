@@ -2,7 +2,6 @@ package com.spring.api.domain.upload.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -27,9 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spring.api.domain.model.Post;
 import com.spring.api.domain.upload.dto.AttachFileDTO;
 import com.spring.api.domain.upload.service.UploadService;
-import com.spring.api.domain.upload.service.impl.UploadServiceImpl;
 
-import jdk.internal.org.jline.utils.Log;
 import lombok.extern.log4j.Log4j;
 
 @Log4j
@@ -145,5 +142,11 @@ public class UploadFileController {
 		return entity;
 		
 	}
-
+	
+	@GetMapping("/posts/{id}")
+	public ResponseEntity<Post> getPost(@PathVariable int id) {
+		Post post = service.getPost(id);
+		return post != null ? new ResponseEntity<Post>(post, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
 }

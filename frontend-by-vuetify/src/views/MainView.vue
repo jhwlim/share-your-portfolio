@@ -73,7 +73,7 @@
                 </v-subheader>
 
                 <v-list-item
-                    v-for="post in posts"
+                    v-for="(post, index) in posts"
                     :key="post.id"
                 >
                     <v-list-item-avatar
@@ -82,7 +82,7 @@
                     >
                         <v-img
                             width="100%"
-                            :src="require('@/assets/images/test/post.jpg')"
+                            :src="getPostImage(index)"
                             @click="moveToArticle(post.id)"
                             class="pointer"
                         ></v-img>
@@ -149,6 +149,11 @@ import UserImage from '@/components/UserImage.vue';
 import { mapState, mapGetters } from 'vuex';
 import PostApi from '@/api/PostApi.js';
 
+function dateFormat(time) {
+    const date = new Date(time);
+    return date;
+}
+
 export default {
     name: 'MainView',
     components: {
@@ -157,34 +162,34 @@ export default {
     data: function() {
         return {
            posts: [
-                {
-                    id: 1,
-                    imagePath : '',
-                    writer: 'test01',
-                    writerId: 1,
-                    writeDate: 'Dec 2, 2020',
-                    title: 'Low Maintenance Plants You Can Grow',
-                    content: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloribus, odit?',
-                    viewCount: 11,
-                    commentCount: 5,
-                    likeCount: 3,
-                    isLiked: true,
-                    image: ''
-                },
-                {
-                    id: 3,
-                    imagePath : '',
-                    writer: 'test02',
-                    writerId: 2,
-                    writeDate: 'Dec 1, 2019',
-                    title: 'Healthy, Herby Meals',
-                    content: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloribus, odit?',
-                    viewCount: 9,
-                    commentCount: 8,
-                    likeCount: 10,
-                    isLiked: false,
-                    image: '',
-                },
+                // {
+                //     id: 1,
+                //     imagePath : '',
+                //     writer: 'test01',
+                //     writerId: 1,
+                //     writeDate: 'Dec 2, 2020',
+                //     title: 'Low Maintenance Plants You Can Grow',
+                //     content: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloribus, odit?',
+                //     viewCount: 11,
+                //     commentCount: 5,
+                //     likeCount: 3,
+                //     isLiked: true,
+                //     image: ''
+                // },
+                // {
+                //     id: 3,
+                //     imagePath : '',
+                //     writer: 'test02',
+                //     writerId: 2,
+                //     writeDate: 'Dec 1, 2019',
+                //     title: 'Healthy, Herby Meals',
+                //     content: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloribus, odit?',
+                //     viewCount: 9,
+                //     commentCount: 8,
+                //     likeCount: 10,
+                //     isLiked: false,
+                //     image: '',
+                // },
             ],
             showArticleCreateModal: false,
             categories: [
@@ -270,8 +275,28 @@ export default {
                 .catch(error => {
                     console.log(error);
                 });
-
+        },
+        getPosts() {
+            PostApi.fetchList()
+                .then(response => {
+                    const result = response.data;
+                    this.posts = result;
+                    for (const i in this.posts) {
+                        this.posts[i].writeDate = dateFormat(this.posts[i].writeDate);
+                    }
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        },
+        getPostImage(index) {
+            const post = this.posts[index];
+            return `/api/images/${post.writerId}/${post.id}/0`;
         }
     },
+    created: function() {
+        this.getPosts();
+    }
 }
 </script>

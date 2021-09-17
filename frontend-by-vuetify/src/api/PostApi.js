@@ -1,5 +1,13 @@
 import axios from 'axios';
 
+const fetchList = () => {
+    return axios.get(`/post/postList`);
+}
+
+const fetchPost = (id) => {
+    return axios.get(`/posts/${id}`);
+}
+
 const savePost = ({ title, content, category, file, writerId }) => {
     const config = {
         headers: {
@@ -18,5 +26,7 @@ const savePost = ({ title, content, category, file, writerId }) => {
 }
 
 export default {
+    fetchList,
+    fetchPost,
     savePost,
 }

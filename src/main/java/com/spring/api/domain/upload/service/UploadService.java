@@ -16,4 +16,6 @@ public interface UploadService {
 	public String searchFilePath(int fileNo);
 	
 	public boolean isAllowedMIMEType(String mimeType);
+	
+	public Post getPost(int id);
 }
