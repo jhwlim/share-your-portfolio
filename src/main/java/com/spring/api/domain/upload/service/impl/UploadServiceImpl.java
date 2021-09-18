@@ -207,6 +207,9 @@ public class UploadServiceImpl implements UploadService{
 		return mapper.searchFilePath(fileNo);
 	}
 
-	
+	@Override
+	public Post getPost(int id) {
+		return mapper.findById(id);
+	}
 
 }

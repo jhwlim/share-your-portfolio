@@ -27,4 +27,5 @@ public class Post {
 	private MultipartFile file;
 	private int numOfPage;
 	
+	private String writer;
 }

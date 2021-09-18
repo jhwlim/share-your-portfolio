@@ -16,4 +16,6 @@ public interface ManagePostMapper {
 	public int searchFileNo(Post post);
 	
 	public String searchFilePath(int fileNo);
+	
+	public Post findById(int id);
 }

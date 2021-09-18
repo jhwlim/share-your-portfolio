@@ -24,6 +24,15 @@
                 {{ post.title }}
             </v-card-title>
 
+            <v-carousel height="auto" hide-delimiters>
+                <v-carousel-item
+                    v-for="i in post.numOfPage"
+                    :key="i"
+                    eager
+                >
+                    <v-img :src="getPostImage(i-1)" eager/>
+                </v-carousel-item>
+            </v-carousel>
 
             <v-card-text class="px-2">
                 {{ post.content }}
@@ -50,6 +59,12 @@
 
 <script>
 import UserImage from '@/components/UserImage.vue';
+import PostApi from '@/api/PostApi.js';
+
+function dateFormat(time) {
+    const date = new Date(time);
+    return date;
+}
 
 export default {
     name: 'PostView',
@@ -59,28 +74,49 @@ export default {
     data: function() {
         return {
             post: {
-                id: 1,
-                imagePath : '',
-                writer: 'test01',
-                writerId: 1,
-                writeDate: 'Dec 2, 2020',
-                title: 'Low Maintenance Plants You Can Grow',
-                content: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloribus, odit?',
-                viewCount: 11,
-                commentCount: 5,
-                likeCount: 3,
-                isLiked: true,
-                image: ''
+                // id: 1,
+                // imagePath : '',
+                // writer: 'test01',
+                // writerId: 1,
+                // writeDate: 'Dec 2, 2020',
+                // title: 'Low Maintenance Plants You Can Grow',
+                // content: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloribus, odit?',
+                // viewCount: 11,
+                // commentCount: 5,
+                // likeCount: 3,
+                // isLiked: true,
+                // image: ''
+                // numOfPage: 30
             },
+        }
+    },
+    computed: {
+        postId() {
+            return this.$route.params.id;
         }
     },
     methods: {
         moveToMessage(writerId, writer) {
             this.$router.push(`/message?id=${writerId}&name=${writer}`)
         },
+        getPost(id) {
+            PostApi.fetchPost(id)
+                .then(response => {
+                    const result = response.data;
+                    this.post = result;
+                    this.post.writeDate = dateFormat(this.post.writeDate);
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.$router.push('/');
+                });
+        },
+        getPostImage(index) {
+            return `/api/images/${this.post.writerId}/${this.post.id}/${index}`;
+        }
     },
     created: function() {
-
+        this.getPost(this.postId);
     }
 }
 </script>

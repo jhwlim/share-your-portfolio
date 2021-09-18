@@ -20,9 +20,13 @@
 	</insert>
 	
 	<select id="bringPostList" resultType="Post">
-		SELECT *
-		FROM posts
-		ORDER BY write_date DESC
+		SELECT 
+			p.*, a.name as writer
+		FROM 
+			posts p
+		JOIN 
+			accounts a ON a.id = p.writer_id 
+		ORDER BY p.write_date DESC
 	</select>
 	
 	<select id="searchFileNo" resultType="Integer">
@@ -35,6 +39,17 @@
 		SELECT upload_path
 		FROM files
 		WHERE file_no = #{fileNo}
+	</select>
+	
+	<select id="findById" resultType="Post">
+		SELECT 
+			p.*, a.name as writer
+		FROM 
+			posts p
+		JOIN 
+			accounts a ON a.id = p.writer_id 
+		WHERE 
+			p.id = #{id};
 	</select>
 	
 </mapper>
